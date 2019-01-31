@@ -1,4 +1,4 @@
-# scripts
+# Scripts
 Scripts used for re-analysis of published datasets. 
 
 Over time, (hopefully) this repos will contain generic scripts for the following dataset types:
