@@ -28,9 +28,6 @@
 # Load FastQC
 module load multiqc
 
-# Define constant variables
-numThreads=8
-
 # Run MultiQC
 pwd; hostname; date
 
