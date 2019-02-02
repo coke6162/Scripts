@@ -1,31 +1,50 @@
 #!/bin/bash
-#SBATCH -p short                   # Partition or queue
-#SBATCH --job-name=project20xx_rnaseq_trim         # Job name
-#SBATCH --mail-type=END            # Mail events (NONE, BEGIN, END, FAIL, ALL)
-#SBATCH --mail-user=coke6162@colorado.edu     # Where to send mail
-#SBATCH --ntasks=1                 # Run on a single CPU
-#SBATCH --cpus-per-task=8         # cpus
-#SBATCH --mem=32gb                # Memory limit
-#SBATCH --time=1:00:00            # Time limit hrs:min:sec
-#SBATCH --output=/Users/coke6162/sbatch_script/output/project20xx_rnaseq_trim_%A_%a.out      # Standard output log
-#SBATCH --error=/Users/coke6162/sbatch_script/error/project20xx_rnaseq_trim_%A_%a.err       # Standard error log
+
+## Script for running trimmomatic
+## Date: 31 Jan 2019
+
+## Example usage:
+## inDir=/Users/coke6162/project20xx_rnaseq/fastq \
+## outDir=/Users/coke6162/project20xx_rnaseq/trimmomatic \
+## logOut=/Users/coke6162/project20xx_rnaseq/trimmomatic/log \
+## adapterFile=/opt/trimmomatic/0.36/adapters/TruSeq3-SE.fa \
+## sbatch --array 0-42 trimmomatic_SE.sbatch
+
+## adapterFile options: NexteraPE-PE.fa, TruSeq2-PE.fa, TruSeq3-PE-2.fa, TruSeq3-PE.fa
+
+## General settings
+#SBATCH -p short
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH --time=8:00:00
+#SBATCH --mem=32GB
+
+# Job name and output
+#SBATCH -J trimmomatic
+#SBATCH -o /Users/%u/sbatch_script/output/slurm-%A_%a.out
+#SBATCH -e /Users/%u/sbatch_script/error/slurm-%A_%a.err
+
+# Email notifications
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=coke6162@colorado.edu
 
 # Set constant variables
 trimExe=/opt/trimmomatic/0.36/trimmomatic-0.36.jar
 numThreads=8
-adapterFile=TruSeq3-PE.fa # NexteraPE-PE.fa, TruSeq2-PE.fa, TruSeq3-PE-2.fa, TruSeq3-PE.fa
 
-# Set query files
+# Define query files
 queries=($(ls ${inDir}/*.fastq.gz | xargs -n 1 basename))
 
 # Run Trimmomatic
 pwd; hostname; date
 
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
+echo "Trimmomatic version: "$(java -jar /opt/trimmomatic/0.36/trimmomatic-0.36.jar --version)
 echo "Starting trimmomatic..."
 
-java -jar ${trimExe} PE -threads ${numThreads} \
--trimlog ${logOutDir}/${queries[$SLURM_ARRAY_TASK_ID]%.fastq.gz}_trimlog.txt \
+java -jar ${trimExe} SE -threads ${numThreads} \
+-trimlog ${logOut}/${queries[$SLURM_ARRAY_TASK_ID]%.fastq.gz}_trimlog.txt \
 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.fastq.gz}_trimmed.fastq.gz \
 ILLUMINACLIP:/opt/trimmomatic/0.36/adapters/${adapterFile}:2:30:10 \
@@ -33,8 +52,12 @@ LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:30
 
 echo $(date +"[%b %d %H:%M:%S] Done")
 
-# Command line entry
-### INDIR=/Users/coke6162/project20xx_rnaseq/fastq \
-### OUTDIR=/Users/coke6162/project20xx_rnaseq/trimmomatic \
-### LOGOUTDIR=/Users/coke6162/project20xx_rnaseq/trimmomatic/log \
-### sbatch --array 0-8 /Users/coke6162/project20xx_rnaseq/scripts/trim.sbatch
+## Explanation of arguments:
+# 'SE' - single-end input
+# '-threads <int>' - number of threads to use
+# '-trimlog <file.txt>' - creates a log of all read trimmings
+# 'ILLUMINACLIP <file.fa>' - cut adapter and other illumina-specific sequences from the read
+# 'SLIDINGWINDOW <int:int>' - performs a sliding window trimming approach. It starts scanning at the 5' end and clips the read once the average quality within the window falls below a threshold.
+# 'LEADING <int>' - cut bases off the start of a read, if below a threshold quality
+# 'TRAILING <int>' - cut bases off the end of a read, if below a threshold quality
+# 'MINLEN <int>' - retain only reads of some length (in bp)

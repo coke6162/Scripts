@@ -49,7 +49,7 @@ echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 bwa mem -t 8 ${bwaIndexDir}/${bwaIndex} ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_paired.fastq.gz \
 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_paired.fastq.gz \
 | samtools view -Sb -q 10 - \
-| samtools sort -@ 8 - -o ${OUTDIR}/${queries[$SLURM_ARRAY_TASK_ID]%_paired.fastq.gz}.sorted.uniq.bam
+| samtools sort -@ 8 - -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_paired.fastq.gz}.sorted.uniq.bam
 
 echo $(date +"[%b %d %H:%M:%S] Done")
 
