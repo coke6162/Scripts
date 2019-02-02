@@ -42,6 +42,7 @@ queries=($(ls ${inDir}/*_paired.fastq.gz | xargs -n 1 basename | sed --expressio
 pwd; hostname; date
 
 echo "Starting bwa alignment..."
+echo "bwa version: 0.7.15-r1140"
 echo "samtools version: "$(samtools --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
