@@ -4,8 +4,8 @@
 ## Date: 31 Jan 2019 
 
 ## Example usage:
-## inDir=/Users/coke6162/project20xx_chipseq/trimmomatic \
-## outDir=/Users/coke6162/project20xx_chipseq/bwa \
+## inDir=/Users/%u/project20xx_chipseq/trimmomatic \
+## outDir=/Users/%u/project20xx_chipseq/bwa \
 ## bwaIndexDir=/scratch/Shares/chuong/genomes/hg38 \
 ## bwaIndex=hg38.main.fa \
 ## sbatch --array 0-42 bwa_SE.sbatch
@@ -28,7 +28,7 @@
 # Email notifications 
 #SBATCH --mail-type=END                                         
 #SBATCH --mail-type=FAIL                                        
-#SBATCH --mail-user=coke6162@colorado.edu
+#SBATCH --mail-user=%u@colorado.edu
 
 # Load bwa and samtools
 module load bwa/0.7.15 samtools/1.8

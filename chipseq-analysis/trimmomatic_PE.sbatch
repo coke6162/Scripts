@@ -4,9 +4,9 @@
 ## Date: 31 Jan 2019 
 
 ## Example usage:
-## inDir=/Users/coke6162/project20xx_chipseq/fastq \
-## outDir=/Users/coke6162/project20xx_chipseq/trimmomatic \
-## logOut=/Users/coke6162/project20xx_chipseq/trimmomatic/log \
+## inDir=/Users/%u/project20xx_chipseq/fastq \
+## outDir=/Users/%u/project20xx_chipseq/trimmomatic \
+## logOut=/Users/%u/project20xx_chipseq/trimmomatic/log \
 ## adapterFile=/opt/trimmomatic/0.36/adapters/TruSeq3-PE.fa \
 ## sbatch --array 0-42 trimmomatic_PE.sbatch
 
@@ -27,7 +27,7 @@
 # Email notifications 
 #SBATCH --mail-type=END                                         
 #SBATCH --mail-type=FAIL                                        
-#SBATCH --mail-user=coke6162@colorado.edu
+#SBATCH --mail-user=%u@colorado.edu
 
 # Set constant variables
 trimExe=/opt/trimmomatic/0.36/trimmomatic-0.36.jar
@@ -36,7 +36,8 @@ numThreads=8
 # Define query files
 # Removes R1/R2 to generate a unique identifier for each pair of files
 # Modify to fit input file name if necessary
-queries=($(ls ${inDir}/*fastq.gz | xargs -n 1 basename | sed --expression='s/_R1.fastq.gz//g' | sed --expression='s/_R2.fastq.gz//g' | uniq))
+queries=($(ls ${inDir}/*fastq.gz | xargs -n 1 basename | sed --expression='s/_R1.fastq.gz//g' \
+	| sed --expression='s/_R2.fastq.gz//g' | uniq))
 
 # Run Trimmomatic
 pwd; hostname; date
