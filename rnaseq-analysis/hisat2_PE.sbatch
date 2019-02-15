@@ -4,8 +4,8 @@
 ## Date: 31 Jan 2019 
 
 ## Example usage:
-## inDir=/Users/coke6162/project20xx_rnaseq/trimmomatic \
-## outDir=/Users/coke6162/project20xx_rnaseq/hisat2 \
+## inDir=/Users/%u/project20xx_rnaseq/trimmomatic \
+## outDir=/Users/%u/project20xx_rnaseq/hisat2 \
 ## hisatIndexDir=/scratch/Shares/chuong/genomes/hg38 \
 ## hisatIndex=hg38.main \
 ## sbatch --array 0-42 hisat2_PE.sbatch
@@ -28,7 +28,7 @@
 # Email notifications 
 #SBATCH --mail-type=END                                         
 #SBATCH --mail-type=FAIL                                        
-#SBATCH --mail-user=coke6162@colorado.edu
+#SBATCH --mail-user=%u@colorado.edu
 
 # Set constant variables
 rnaStrandness=FR # specify whether the library is forward (FR) or reverse stranded (RF)
@@ -36,9 +36,8 @@ numThreads=8
 
 # Set query files
 # note: remove R1/R2 to generate a unique identifier for each pair of files
-queries=($(ls ${inDir}/*_paired.fastq.gz | xargs -n 1 basename | sed --expression='s/_R1_paired.fastq.gz//g' \
-	| sed --expression='s/_R2_paired.fastq.gz//g' | sed --expression='s/_R1_unpaired.fastq.gz//g' \
-	| sed --expression='s/_R2_unpaired.fastq.gz//g' | uniq))
+queries=($(ls ${inDir}/*_paired.fastq.gz | xargs -n 1 basename | sed 's/_R1_paired.fastq.gz//g' \
+	| sed 's/_R2_paired.fastq.gz//g' | uniq))
 
 # Load hisat2 and samtools
 module load hisat2 samtools
@@ -52,7 +51,7 @@ echo "samtools version: "$(samtools --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
 hisat2 -p ${numThreads} --rna-strandness ${rnaStrandness} --no-softclip -x ${hisatIndexDir}/${hisatIndex} \
--1 ${queries[$SLURM_ARRAY_TASK_ID]}_R1_paired.fastq.gz -2 ${queries[$SLURM_ARRAY_TASK_ID]}_R2_paired.fastq.gz \
+-1 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_paired.fastq.gz -2 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_paired.fastq.gz \
 | samtools view -q 10 -Sb - \
 | samtools sort -@ ${numThreads} - -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_paired.fastq.gz}.sorted.uniq.bam
 

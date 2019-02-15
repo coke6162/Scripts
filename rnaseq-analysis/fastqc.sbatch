@@ -4,8 +4,8 @@
 ## Date: 31 Jan 2019
 
 ## Example usage:
-## inDir=/Users/coke6162/project20xx_rnaseq/fastq \
-## outDir=/Users/coke6162/project20xx_rnaseq/fastqc \
+## inDir=/Users/%u/project20xx_rnaseq/fastq \
+## outDir=/Users/%u/project20xx_rnaseq/fastqc \
 ## sbatch --array 0-42 fastqc.sbatch
 
 # General settings
@@ -23,7 +23,7 @@
 # Email notifications
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
-#SBATCH --mail-user=coke6162@colorado.edu
+#SBATCH --mail-user=%u@colorado.edu
 
 # Load FastQC
 module load fastqc

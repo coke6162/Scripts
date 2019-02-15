@@ -4,8 +4,8 @@
 ## Date: 31 Jan 2019 
 
 ## Example usage:
-## inDir=/Users/coke6162/project20xx_rnaseq/trimmomatic \
-## outDir=/Users/coke6162/project20xx_rnaseq/hisat2 \
+## inDir=/Users/%u/project20xx_rnaseq/trimmomatic \
+## outDir=/Users/%u/project20xx_rnaseq/hisat2 \
 ## hisatIndexDir=/scratch/Shares/chuong/genomes/hg38 \
 ## hisatIndex=hg38.main \
 ## sbatch --array 0-42 hisat2_SE.sbatch
@@ -28,7 +28,7 @@
 # Email notifications 
 #SBATCH --mail-type=END                                         
 #SBATCH --mail-type=FAIL                                        
-#SBATCH --mail-user=coke6162@colorado.edu
+#SBATCH --mail-user=%u@colorado.edu
 
 # Set constant variables
 numThreads=8
@@ -49,7 +49,7 @@ echo "samtools version: "$(samtools --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
 hisat2 -p ${numThreads} --no-softclip -x ${hisatIndexDir}/${hisatIndex} \
--U ${queries[$SLURM_ARRAY_TASK_ID]} \
+-U ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 | samtools view -q 10 -Sb - \
 | samtools sort -@ ${numThreads} - -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_paired.fastq.gz}.sorted.uniq.bam
 

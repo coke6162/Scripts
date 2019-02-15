@@ -4,8 +4,8 @@
 ## Date: 31 Jan 2019 
 
 ## Example usage:
-## inDir=/Users/coke6162/project20xx_rnaseq/hisat2 \
-## outDir=/Users/coke6162/project20xx_rnaseq/featureCounts \
+## inDir=/Users/%u/project20xx_rnaseq/hisat2 \
+## outDir=/Users/%u/project20xx_rnaseq/featureCounts \
 ## annotationFile=/scratch/Shares/chuong/genomes/hg38/gencode.v28.annotation.gtf
 ## sbatch featureCounts.sbatch
 
@@ -24,7 +24,7 @@
 # Email notifications 
 #SBATCH --mail-type=END                                         
 #SBATCH --mail-type=FAIL                                        
-#SBATCH --mail-user=coke6162@colorado.edu
+#SBATCH --mail-user=%u@colorado.edu
 
 # Load subread
 module load subread

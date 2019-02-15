@@ -4,9 +4,9 @@
 ## Date: 31 Jan 2019
 
 ## Example usage:
-## inDir=/Users/coke6162/project20xx_rnaseq/fastq \
-## outDir=/Users/coke6162/project20xx_rnaseq/trimmomatic \
-## logOut=/Users/coke6162/project20xx_rnaseq/trimmomatic/log \
+## inDir=/Users/%u/project20xx_rnaseq/fastq \
+## outDir=/Users/%u/project20xx_rnaseq/trimmomatic \
+## logOut=/Users/%u/project20xx_rnaseq/trimmomatic/log \
 ## adapterFile=/opt/trimmomatic/0.36/adapters/TruSeq3-PE.fa \
 ## sbatch --array 0-42 trimmomatic_PE.sbatch
 
@@ -27,7 +27,7 @@
 # Email notifications
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
-#SBATCH --mail-user=coke6162@colorado.edu
+#SBATCH --mail-user=%u@colorado.edu
 
 # Set constant variables
 trimExe=/opt/trimmomatic/0.36/trimmomatic-0.36.jar
