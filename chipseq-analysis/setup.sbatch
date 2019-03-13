@@ -4,7 +4,7 @@
 ## Date: 13 March 2019
 
 ## Example usage:
-## inDir=/Users/%u projectName=project20xx_chipseq sbatch setup.sbatch
+## inDir=/Users/coke6162 projectName=project20xx_chipseq sbatch setup.sbatch
 
 # General settings
 #SBATCH -p short
