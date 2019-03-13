@@ -1,0 +1,43 @@
+#!/bin/bash
+
+## Script to download a bunch of sras
+## Date: 13 March 2019
+##
+## Example usage:
+## inDir=/Users/coke6162 projectName=mostafavi2016_chipseq sbatch --array 0-40 /Users/coke6162/repos/scripts/chipseq-analysis/sraDownload.sbatch
+
+# General settings
+#SBATCH -p short
+#SBATCH -N 1
+#SBATCH -c 1
+#SBATCH --time=18:00:00
+#SBATCH --mem=64GB
+
+# Job name and output
+#SBATCH -J sraDownload
+#SBATCH -o /Users/%u/sbatch_script/output/slurm-%A_%a.out
+#SBATCH -o /Users/%u/sbatch_script/error/slurm-%A_%a.err
+
+# Email notifications 
+#SBATCH --mail-type=END                                         
+#SBATCH --mail-type=FAIL                                        
+#SBATCH --mail-user=coke6162@colorado.edu
+
+# load modules
+module load sra
+
+# set query files
+queries=($(cat ${inDir}/repos/project_files/${projectName}.txt | grep -v "#" | awk '{print $2}'))
+
+# run the thing
+pwd; hostname; date
+
+echo "Working directory:" $inDir/${projectName}/fastq
+echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
+echo $(date +"[%b %d %H:%M:%S] Downloading sra...")
+
+cd ${inDir}/${projectName}/fastq
+
+fastq-dump --split-files --gzip ${queries[$SLURM_ARRAY_TASK_ID]}
+
+echo $(date +"[%b %d %H:%M:%S] Done")
