@@ -28,7 +28,7 @@
 # Run MultiQC
 pwd; hostname; date
 
-echo "MultiQC version: "(multiqc --version)
+echo "MultiQC version: "$(multiqc --version)
 
 echo $(date +"[%b %d %H:%M:%S] Running multiqc...")
 
