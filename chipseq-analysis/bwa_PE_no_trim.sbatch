@@ -47,7 +47,7 @@ echo "samtools version: "$(samtools --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
 echo $(date +"[%b %d %H:%M:%S] Starting bwa alignment...")
-echo $(date +"[%b %d %H:%M:%S] Converting bams to sams, filtering out low quality reads, and sorting..."
+echo $(date +"[%b %d %H:%M:%S] Converting bams to sams, filtering out low quality reads, and sorting...")
 
 bwa mem -t 8 ${bwaIndexDir}/${bwaIndex} ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1.fastq.gz \
 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2.fastq.gz \
