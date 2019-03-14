@@ -4,8 +4,8 @@
 ## Date: 31 Jan 2019 
 
 ## Example usage:
-## inDir=/Users/%u/project20xx_chipseq/fastqc \
-## outDir=/Users/%u/project20xx_chipseq/fastqc/multiqc \
+## inDir=/Users/coke6162/project20xx_chipseq/fastqc \
+## outDir=/Users/coke6162/project20xx_chipseq/fastqc/multiqc \
 ## sbatch multiqc.sbatch
 
 # General settings
@@ -31,8 +31,9 @@ module load multiqc
 # Run MultiQC
 pwd; hostname; date
 
-echo "Running MultiQC..."
 echo "MultiQC version: "(multiqc --version)
+
+echo $(date +"[%b %d %H:%M:%S] Running multiqc...")
 
 multiqc ${inDir}/*.zip --outdir ${outDir}
 

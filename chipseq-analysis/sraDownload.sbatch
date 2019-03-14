@@ -2,7 +2,7 @@
 
 ## Script to download a bunch of sras
 ## Date: 13 March 2019
-##
+
 ## Example usage:
 ## inDir=/Users/coke6162 projectName=mostafavi2016_chipseq sbatch --array 0-40 /Users/coke6162/repos/scripts/chipseq-analysis/sraDownload.sbatch
 
@@ -32,8 +32,11 @@ queries=($(cat ${inDir}/repos/project_files/${projectName}.txt | grep -v "#" | a
 # run the thing
 pwd; hostname; date
 
-echo "Working directory:" $inDir/${projectName}/fastq
+echo "Working directory: " ${inDir}/${projectName}/fastq
+echo "fastq-dump version: "$(fastq-dump --version)
+
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
+
 echo $(date +"[%b %d %H:%M:%S] Downloading sra...")
 
 cd ${inDir}/${projectName}/fastq

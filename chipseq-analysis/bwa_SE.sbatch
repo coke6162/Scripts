@@ -4,8 +4,8 @@
 ## Date: 31 Jan 2019 
 
 ## Example usage:
-## inDir=/Users/%u/project20xx_chipseq/trimmomatic \
-## outDir=/Users/%u/project20xx_chipseq/bwa \
+## inDir=/Users/coke6162/project20xx_chipseq/trimmomatic \
+## outDir=/Users/coke6162/project20xx_chipseq/bwa \
 ## bwaIndexDir=/scratch/Shares/chuong/genomes/hg38 \
 ## bwaIndex=hg38.main.fa \
 ## sbatch --array 0-42 bwa_SE.sbatch
@@ -28,7 +28,7 @@
 # Email notifications 
 #SBATCH --mail-type=END                                         
 #SBATCH --mail-type=FAIL                                        
-#SBATCH --mail-user=%u@colorado.edu
+#SBATCH --mail-user=coke6162@colorado.edu
 
 # Load bwa and samtools
 module load bwa/0.7.15 samtools/1.8
@@ -39,10 +39,13 @@ queries=($(ls ${inDir}/*_trimmed.fastq.gz | xargs -n 1 basename))
 # Run bwa
 pwd; hostname; date
 
-echo "Starting bwa alignment..."
 echo "bwa version: 0.7.15-r1140"
 echo "samtools version: "$(samtools --version)
+
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
+
+echo $(date +"[%b %d %H:%M:%S] Starting bwa alignment...")
+echo $(date +"[%b %d %H:%M:%S] Converting bams to sams, filtering out low quality reads, and sorting..."
 
 bwa mem -t 8 ${bwaIndexDir}/${bwaIndex} ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 | samtools view -Sb -q 10 - \

@@ -4,9 +4,9 @@
 ## Date: 31 Jan 2019 
 
 ## Example usage:
-## inDir=/Users/%u/project20xx_chipseq/fastq \
-## outDir=/Users/%u/project20xx_chipseq/trimmomatic \
-## logOut=/Users/%u/project20xx_chipseq/trimmomatic/log \
+## inDir=/Users/coke6162/project20xx_chipseq/fastq \
+## outDir=/Users/coke6162/project20xx_chipseq/trimmomatic \
+## logOut=/Users/coke6162/project20xx_chipseq/trimmomatic/log \
 ## adapterFile=/opt/trimmomatic/0.36/adapters/TruSeq3-PE.fa \
 ## sbatch --array 0-42 trimmomatic_PE.sbatch
 
@@ -27,7 +27,7 @@
 # Email notifications 
 #SBATCH --mail-type=END                                         
 #SBATCH --mail-type=FAIL                                        
-#SBATCH --mail-user=%u@colorado.edu
+#SBATCH --mail-user=coke6162@colorado.edu
 
 # Set constant variables
 trimExe=/opt/trimmomatic/0.36/trimmomatic-0.36.jar
@@ -42,9 +42,11 @@ queries=($(ls ${inDir}/*fastq.gz | xargs -n 1 basename | sed --expression='s/_R1
 # Run Trimmomatic
 pwd; hostname; date
 
-echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 echo "Trimmomatic version: "$(java -jar /opt/trimmomatic/0.36/trimmomatic-0.36.jar --version)
-echo "Starting trimmomatic..."
+
+echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
+
+echo $(date +"[%b %d %H:%M:%S] Running trimmomatic...")
 
 java -jar ${trimExe} PE -threads ${numThreads} \
 -trimlog ${logOut}/${queries[$SLURM_ARRAY_TASK_ID]}_trimlog.txt \
