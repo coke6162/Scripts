@@ -25,9 +25,6 @@
 #SBATCH --mail-type=FAIL                                        
 #SBATCH --mail-user=%u@colorado.edu
 
-# Load FastQC
-module load multiqc
-
 # Run MultiQC
 pwd; hostname; date
 
