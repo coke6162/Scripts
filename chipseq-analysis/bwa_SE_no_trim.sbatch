@@ -49,7 +49,7 @@ echo $(date +"[%b %d %H:%M:%S] Converting bams to sams, filtering out low qualit
 
 bwa mem -t 8 ${bwaIndexDir}/${bwaIndex} ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 | samtools view -Sb -q 10 - \
-| samtools sort -@ 8 - -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_trimmed.fastq.gz}.sorted.uniq.bam
+| samtools sort -@ 8 - -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.fastq.gz}.sorted.uniq.bam
 
 echo $(date +"[%b %d %H:%M:%S] Done")
 
