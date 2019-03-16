@@ -30,7 +30,7 @@
 pwd; hostname; date
 
 echo "Project: "${project}
-echo "TrackDb: "${trackdb}
+echo "TrackDb: "${trackDb}
 
 echo $(date +"[%b %d %H:%M:%S] Adding tracks to hub...")
 
