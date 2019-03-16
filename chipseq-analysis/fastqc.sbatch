@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Script for running fastqc
+## Script for running FastQC
 ## Date: 31 Jan 2019 
 
 ## Example usage:
@@ -37,10 +37,8 @@ queries=($(ls ${inDir}/*.fastq.gz | xargs -n 1 basename))
 # Run FastQC
 pwd; hostname; date
 
-echo "fastqc version: "$(fastqc --version)
-
+echo "FastQC version: "$(fastqc --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
-
 echo $(date +"[%b %d %H:%M:%S] Running fastqc on raw fastq files...")
 
 fastqc -o ${outDir} -f fastq -t ${numThreads} ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}

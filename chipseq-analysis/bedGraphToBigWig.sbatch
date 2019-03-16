@@ -53,4 +53,4 @@ echo $(date +"[%b %d %H:%M:%S] Removing sorted bedgraph...")
 
 rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bdg}.sorted.bdg
 
-echo $(date +"[%b %d %H:%M:%S] Done!")
+echo $(date +"[%b %d %H:%M:%S] Done")

@@ -29,7 +29,6 @@
 pwd; hostname; date
 
 echo "MultiQC version: "$(multiqc --version)
-
 echo $(date +"[%b %d %H:%M:%S] Running multiqc...")
 
 multiqc ${inDir}/*.zip --outdir ${outDir}

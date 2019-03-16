@@ -34,11 +34,9 @@ module load python/2.7.14/MACS/2.1.1
 pwd; hostname; date
 
 echo "MACS2 version: "$(macs2 --version)
-
 echo "Processing treatment file: "${treatFile}
 echo "Control file: "${controlFile}
 echo "Genome size: "${genomeSize}
-
 echo $(date +"[%b %d %H:%M:%S] Starting MACS2 peak calling...")
 
 macs2 callpeak -t ${inDir}/${treatFile} -c ${inDir}/${controlFile} -n ${name} -B --SPMR -g ${genomeSize} -f BAM --outdir ${outDir}

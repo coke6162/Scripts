@@ -34,9 +34,7 @@ pwd; hostname; date
 
 echo "Working directory: " ${inDir}/${projectName}/fastq
 echo "fastq-dump version: "$(fastq-dump --version)
-
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
-
 echo $(date +"[%b %d %H:%M:%S] Downloading sra...")
 
 cd ${inDir}/${projectName}/fastq

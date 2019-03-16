@@ -35,7 +35,6 @@ queries=($(ls ${inDir}/*.sorted.uniq.bam | xargs -n 1 basename))
 pwd; hostname; date
 
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
-
 echo $(date +"[%b %d %H:%M:%S] Running sambamba markdup...")
 
 sambamba markdup --remove-duplicates --nthreads=4 --overflow-list-size=600000 --tmpdir=${inDir}/tmp --show-progress \
@@ -48,13 +47,11 @@ echo $(date +"[%b %d %H:%M:%S] Done")
 pwd; hostname; date
 
 echo "Processing input file: "${queries[$SLURM_ARRAY_TASK_ID]}
-
 echo "Running sambamba flagstat on input bam"
 
 sambamba flagstat ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} > ${outDir}/flagstat/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.uniq.bam}_flagstat.txt
 
 echo "Processing dedup file: "${queries[$SLURM_ARRAY_TASK_ID]%.sorted.uniq.bam}_dedup.bam
-
 echo "Running sambamba flagstat on dedup bam"
 
 sambamba flagstat ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.uniq.bam}_dedup.bam > ${outDir}/flagstat/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.uniq.bam}_dedup_flagstat.txt

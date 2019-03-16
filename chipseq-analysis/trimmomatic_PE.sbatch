@@ -43,9 +43,7 @@ queries=($(ls ${inDir}/*fastq.gz | xargs -n 1 basename | sed --expression='s/_R1
 pwd; hostname; date
 
 echo "Trimmomatic version: "$(java -jar /opt/trimmomatic/0.36/trimmomatic-0.36.jar --version)
-
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
-
 echo $(date +"[%b %d %H:%M:%S] Running trimmomatic...")
 
 java -jar ${trimExe} PE -threads ${numThreads} \

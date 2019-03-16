@@ -41,7 +41,6 @@ pwd; hostname; date
 
 echo "bwa version: 0.7.15-r1140"
 echo "samtools version: "$(samtools --version)
-
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
 echo $(date +"[%b %d %H:%M:%S] Starting bwa alignment...")
