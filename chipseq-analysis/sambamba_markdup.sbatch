@@ -38,7 +38,7 @@ echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
 echo $(date +"[%b %d %H:%M:%S] Running sambamba markdup...")
 
-sambamba markdup --remove-duplicates --nthreads=4 --overflow-list-size=600000 --tmpdir=${inDir}/tmp \
+sambamba markdup --remove-duplicates --nthreads=4 --overflow-list-size=600000 --tmpdir=${inDir}/tmp --show-progress \
 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.uniq.bam}_dedup.bam
 
