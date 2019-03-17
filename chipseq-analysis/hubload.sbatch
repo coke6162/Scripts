@@ -37,7 +37,7 @@ echo $(date +"[%b %d %H:%M:%S] Adding tracks to hub...")
 for i in ${inDir}/*.bw 
 do
 	echo "Processing file: "${i}
-	hubload.py --input ${i} --supertrack ${project} --trackDb ${trackDb}
+	/opt/python/2.7.14/bin/python2.7 /scratch/Shares/chuong/software/scripts/hubload.py --input ${i} --supertrack ${project} --trackDb ${trackDb}
 	echo $(date +"[%b %d %H:%M:%S] Done")
 done
 
