@@ -5,9 +5,9 @@
 
 ## Example usage:
 ## projectName=project20xx_chipseq \
-## bedDir=/Users/coke6162/project20xx_chipseq/macs2/filtered_peaks/
+## bedDir=/Users/coke6162/project20xx_chipseq/macs2/filtered_peaks \
 ## bed=all_project20xx_chipseq.narrowPeaks \
-## outDir=/Users/coke6162/project20xx_chipseq/macs2/filtered_peaks \
+## outDir=/Users/coke6162/project20xx_chipseq/multicov \
 ## sbatch computeBamCountMatrix.sbatch
 
 # General settings
@@ -41,6 +41,6 @@ echo $(date +"[%b %d %H:%M:%S] Computing matrix of bam alignment counts...")
 
 # Compute a matrix of bam alignment counts for each region of interest
 
-bedtools multicov -bams ${bams} -bed ${bedDir}/${bed} > ${outDir}/bamCounts_${projectName}.tab
+bedtools multicov -bams ${bams} -bed ${bedDir}/${bed} > ${outDir}/bamCounts_${projectName}_d100.tab
 
 echo $(date +"[%b %d %H:%M:%S] Done")
