@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ## Script for running multiqc
-## Date: 31 Jan 2019 
+## Date: 30 March 2019 
 
 ## Example usage:
-## inDir=/Users/%u/project20xx_rnaseq/fastqc \
-## outDir=/Users/%u/project20xx_rnaseq/fastqc/multiqc \
+## inDir=/Users/coke6162/project20xx_rnaseq/fastqc \
+## outDir=/Users/coke6162/project20xx_rnaseq/fastqc/multiqc \
 ## sbatch multiqc.sbatch
 
 # General settings
@@ -23,16 +23,13 @@
 # Email notifications 
 #SBATCH --mail-type=END                                         
 #SBATCH --mail-type=FAIL                                        
-#SBATCH --mail-user=%u@colorado.edu
-
-# Load FastQC
-module load multiqc
+#SBATCH --mail-user=coke6162@colorado.edu
 
 # Run MultiQC
 pwd; hostname; date
 
-echo "Running MultiQC..."
-echo "MultiQC version: "(multiqc --version)
+echo "MultiQC version: "$(multiqc --version)
+echo $(date +"[%b %d %H:%M:%S] Running multiqc...")
 
 multiqc ${inDir}/*.zip --outdir ${outDir}
 

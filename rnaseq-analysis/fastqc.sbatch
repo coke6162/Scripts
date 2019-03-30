@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ## Script for running fastqc
-## Date: 31 Jan 2019
+## Date: 30 March 2019
 
 ## Example usage:
-## inDir=/Users/%u/project20xx_rnaseq/fastq \
-## outDir=/Users/%u/project20xx_rnaseq/fastqc \
+## inDir=/Users/coke6162/project20xx_rnaseq/fastq \
+## outDir=/Users/coke6162/project20xx_rnaseq/fastqc \
 ## sbatch --array 0-42 fastqc.sbatch
 
 # General settings
@@ -23,7 +23,7 @@
 # Email notifications
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
-#SBATCH --mail-user=%u@colorado.edu
+#SBATCH --mail-user=coke6162@colorado.edu
 
 # Load FastQC
 module load fastqc
@@ -37,9 +37,9 @@ queries=($(ls ${inDir}/*.fastq.gz | xargs -n 1 basename))
 # Run FastQC
 pwd; hostname; date
 
-echo "Running FastQC..."
 echo "FastQC version: "$(fastqc --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
+echo $(date +"[%b %d %H:%M:%S] Running fastqc on raw fastq files...")
 
 fastqc -o ${outDir} -f fastq -t ${numThreads} ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}
 

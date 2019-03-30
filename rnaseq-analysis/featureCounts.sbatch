@@ -1,12 +1,12 @@
 #!/bin/bash
 
-## Script for running hisat2
-## Date: 31 Jan 2019 
+## Script for running featureCounts
+## Date: 30 March 2019 
 
 ## Example usage:
-## inDir=/Users/%u/project20xx_rnaseq/hisat2 \
-## outDir=/Users/%u/project20xx_rnaseq/featureCounts \
-## annotationFile=/scratch/Shares/chuong/genomes/hg38/gencode.v28.annotation.gtf
+## inDir=/Users/coke6162/project20xx_rnaseq/hisat2 \
+## outDir=/Users/coke6162/project20xx_rnaseq/featureCounts \
+## annotationFile=/scratch/Shares/chuong/genomes/mm10/gencode.vM18.annotation.gtf
 ## sbatch featureCounts.sbatch
 
 ## General settings
@@ -17,14 +17,14 @@
 #SBATCH --mem=16GB
 
 # Job name and output
-#SBATCH -J bwa
+#SBATCH -J featureCounts
 #SBATCH -o /Users/%u/sbatch_script/output/slurm-%j.out
 #SBATCH -e /Users/%u/sbatch_script/error/slurm-%j.err
 
 # Email notifications 
 #SBATCH --mail-type=END                                         
 #SBATCH --mail-type=FAIL                                        
-#SBATCH --mail-user=%u@colorado.edu
+#SBATCH --mail-user=coke6162@colorado.edu
 
 # Load subread
 module load subread
@@ -33,8 +33,8 @@ module load subread
 # Note: this does not include any normalization 
 pwd; hostname; date
 
-echo "Starting featureCounts gene-level summarization..."
 echo "featureCounts version: "$(featureCounts -v)
+echo "Starting featureCounts gene-level summarization..."
 
 for i in {0..2} # "-s 0" for unstranded, "-s 1" for stranded, "-s 2" for reversely stranded
 do

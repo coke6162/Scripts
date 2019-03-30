@@ -23,7 +23,7 @@
 # Email notifications 
 #SBATCH --mail-type=END                                         
 #SBATCH --mail-type=FAIL                                        
-#SBATCH --mail-user=%u@colorado.edu
+#SBATCH --mail-user=coke6162@colorado.edu
 
 # Run MultiQC
 pwd; hostname; date

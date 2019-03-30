@@ -1,17 +1,19 @@
 #!/bin/bash
 
 ## Script for running hisat2
-## Date: 31 Jan 2019 
+## Date: 30 Narch 2019 
 
 ## Example usage:
-## inDir=/Users/%u/project20xx_rnaseq/trimmomatic \
-## outDir=/Users/%u/project20xx_rnaseq/hisat2 \
+## inDir=/Users/coke6162/project20xx_rnaseq/trimmomatic \
+## outDir=/Users/coke6162/project20xx_rnaseq/hisat2 \
 ## hisatIndexDir=/scratch/Shares/chuong/genomes/hg38 \
 ## hisatIndex=hg38.main \
+## rnaStrandness=FR \
 ## sbatch --array 0-42 hisat2_PE.sbatch
 
 ## hisatIndexDir options: hg38, mm10
 ## hisatIndex: hg38.main, mm10.main
+## rnaStrandness options: FR (forward) or RF (reverse stranded)
 
 ## General settings
 #SBATCH -p short
@@ -21,17 +23,16 @@
 #SBATCH --mem=16GB
 
 # Job name and output
-#SBATCH -J bwa
+#SBATCH -J hisat2_PE
 #SBATCH -o /Users/%u/sbatch_script/output/slurm-%A_%a.out
 #SBATCH -e /Users/%u/sbatch_script/error/slurm-%A_%a.err
 
 # Email notifications 
 #SBATCH --mail-type=END                                         
 #SBATCH --mail-type=FAIL                                        
-#SBATCH --mail-user=%u@colorado.edu
+#SBATCH --mail-user=coke6162@colorado.edu
 
 # Set constant variables
-rnaStrandness=FR # specify whether the library is forward (FR) or reverse stranded (RF)
 numThreads=8
 
 # Set query files
@@ -45,10 +46,10 @@ module load hisat2 samtools
 # Run hisat2
 pwd; hostname; date
 
-echo "Starting HISAT2 alignment..."
 echo "HISAT2 version: "$(hisat2 --version)
 echo "samtools version: "$(samtools --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
+echo "Starting HISAT2 alignment..."
 
 hisat2 -p ${numThreads} --rna-strandness ${rnaStrandness} --no-softclip -x ${hisatIndexDir}/${hisatIndex} \
 -1 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_paired.fastq.gz -2 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_paired.fastq.gz \
