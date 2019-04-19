@@ -42,6 +42,8 @@ mkdir -p ${projectName}/fastqc
 mkdir -p ${projectName}/fastqc/multiqc
 mkdir -p ${projectName}/trimmomatic
 mkdir -p ${projectName}/trimmomatic/log
+mkdir -p ${projectName}/trimmomatic/fastqc
+mkdir -p ${projectName}/trimmomatic/fastqc/multiqc
 mkdir -p ${projectName}/hisat2
 mkdir -p ${projectName}/featureCounts
 mkdir -p ${projectName}/DESeq2
