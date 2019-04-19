@@ -47,7 +47,7 @@ java -jar ${trimExe} SE -threads ${numThreads} \
 -trimlog ${logOut}/${queries[$SLURM_ARRAY_TASK_ID]%.fastq.gz}_trimlog.txt \
 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.fastq.gz}_trimmed.fastq.gz \
-ILLUMINACLIP:/opt/trimmomatic/0.36/adapters/${adapterFile}:2:30:10 \
+ILLUMINACLIP:${adapterFile}:2:30:10 \
 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:30
 
 echo $(date +"[%b %d %H:%M:%S] Done")

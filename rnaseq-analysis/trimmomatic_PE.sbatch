@@ -50,7 +50,7 @@ java -jar ${trimExe} PE -threads ${numThreads} \
 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1.fastq.gz ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2.fastq.gz \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_paired.fastq.gz ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_unpaired.fastq.gz \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_paired.fastq.gz ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_unpaired.fastq.gz \
-ILLUMINACLIP:/opt/trimmomatic/0.36/adapters/${adapterFile}:2:30:10 \
+ILLUMINACLIP:${adapterFile}:2:30:10 \
 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
 
 echo $(date +"[%b %d %H:%M:%S] Done")
