@@ -1,11 +1,12 @@
 #!/bin/bash
 
 ## Script for running multiqc
-## Date: 30 March 2019 
+## Date: 30 April 2019 
 
 ## Example usage:
-## inDir=/Users/coke6162/project20xx_rnaseq/fastqc \
-## outDir=/Users/coke6162/project20xx_rnaseq/fastqc/multiqc \
+## cd /Users/coke6162/repos/scripts/atacseq-analysis
+## inDir=/Users/coke6162/project20xx_atacseq/fastqc \
+## outDir=/Users/coke6162/project20xx_atacseq/fastqc/multiqc \
 ## sbatch multiqc.sbatch
 
 # General settings
@@ -34,4 +35,3 @@ echo $(date +"[%b %d %H:%M:%S] Running multiqc...")
 multiqc ${inDir}/*.zip --outdir ${outDir}
 
 echo $(date +"[%b %d %H:%M:%S] Done")
-

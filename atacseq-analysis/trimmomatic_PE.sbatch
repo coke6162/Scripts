@@ -1,12 +1,13 @@
 #!/bin/bash
 
 ## Script for running trimmomatic
-## Date: 30 March 2019
+## Date: 30 April 2019
 
 ## Example usage:
-## inDir=/Users/coke6162/project20xx_rnaseq/fastq \
-## outDir=/Users/coke6162/project20xx_rnaseq/trimmomatic \
-## logOut=/Users/coke6162/project20xx_rnaseq/trimmomatic/log \
+## cd /Users/coke6162/repos/scripts/atacseq-analysis
+## inDir=/Users/coke6162/project20xx_atacseq/fastq \
+## outDir=/Users/coke6162/project20xx_atacseq/trimmomatic \
+## logOut=/Users/coke6162/project20xx_atacseq/trimmomatic/log \
 ## adapterFile=/opt/trimmomatic/0.36/adapters/TruSeq3-PE.fa \
 ## sbatch --array 0-42 trimmomatic_PE.sbatch
 
