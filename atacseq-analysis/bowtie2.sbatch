@@ -15,7 +15,7 @@
 #SBATCH -p short
 #SBATCH -N 1
 #SBATCH -n 8
-#SBATCH --time=12:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mem=64G
 
 # Job name and output
@@ -47,29 +47,44 @@ echo "Samtools version: "$(samtools --version)
 
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
-bowtie2 --end-to-end --very-sensitive -X 1000 --fr -x ${indexDir}/${name} \
+bowtie2 \
+--end-to-end \
+--very-sensitive \
+-X 1000 \
+--fr \
+--threads ${numThreads} \
+-x ${indexDir}/${name} \
 -1 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_paired.fastq.gz \
 -2 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_paired.fastq.gz \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam
 
 # Convert sam files to bam files, filtering out low quality (<10) & unmapped (through '-F 4' option) reads
 echo "Convert sams to bams"
-samtools view -@ 8 -Sb -q 10 -F 4 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam \
+samtools view \
+-@ ${numThreads} \
+-Sb \
+-q 10 \
+-F 4 \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bam
 
 # Sort bam files
 echo "Sort bams"
-samtools sort -@ 8 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bam \
+samtools sort \
+-@ ${numThreads} \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bam \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam
 
 # Generate flagstat files from sorted bam files
 echo "Make flagstat files"
-samtools flagstat ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam \
+samtools flagstat \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam \
 > ${outDir}/flagstat/${queries[$SLURM_ARRAY_TASK_ID]}_flagstat.txt
 
 # Index sorted bam files
 echo "Index sorted bams"
-samtools index ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam \
+samtools index \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam.bai
 
 # Determine percentage of total reads that mapped to mitochondrial genes
@@ -78,10 +93,10 @@ chrMreads=`samtools view -c ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.ba
 totalReads=`samtools view -c ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam`
 fractionMreads=`echo "100 * ${chrMreads} / ${totalReads}" | bc -l`
 touch ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_chrMreadsFraction.txt
-echo ${queries[$SLURM_ARRAY_TASK_ID]} >> ${queries[$SLURM_ARRAY_TASK_ID]}/_chrMreadsFraction.txt
-echo ${totalReads} 'total mapped reads' >> ${queries[$SLURM_ARRAY_TASK_ID]}/_chrMreadsFraction.txt
-echo ${chrMreads} 'mitochondrial reads' >> ${queries[$SLURM_ARRAY_TASK_ID]}/_chrMreadsFraction.txt
-echo ${fractionMreads} 'percentage of mitochondrial reads from total mapped reads' >> ${queries[$SLURM_ARRAY_TASK_ID]}/_chrMreadsFraction.txt
+echo ${queries[$SLURM_ARRAY_TASK_ID]} >> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_chrMreadsFraction.txt
+echo ${totalReads} 'total mapped reads' >> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_chrMreadsFraction.txt
+echo ${chrMreads} 'mitochondrial reads' >> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_chrMreadsFraction.txt
+echo ${fractionMreads} 'percentage of mitochondrial reads from total mapped reads' >> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_chrMreadsFraction.txt
 
 echo $(date +"[%b %d %H:%M:%S] Done")
 
