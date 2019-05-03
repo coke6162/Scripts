@@ -42,8 +42,8 @@ echo "Starting deeptools..."
 echo $(date +"[%b %d %H:%M:%S] Compute matrix...")
 
 # Use "computeMatrix" to generate data underlying heatmap
-windowLeft=2000
-windowRight=2000
+windowLeft=4000
+windowRight=4000
 binSize=10
 numCPU=16
 
