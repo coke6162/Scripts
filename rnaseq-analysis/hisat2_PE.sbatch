@@ -6,13 +6,13 @@
 ## Example usage:
 ## inDir=/Users/coke6162/project20xx_rnaseq/bbduk \
 ## outDir=/Users/coke6162/project20xx_rnaseq/hisat2 \
-## hisatIndexDir=/scratch/Shares/chuong/genomes/hg38 \
-## hisatIndex=hg38.main \
+## hisatIndexDir=/Users/CL_Shared/db/genomes/bosTau8/index/hisat2 \
+## hisatIndex=bosTau8 \
 ## rnaStrandness=FR \
 ## sbatch --array 0-42 hisat2_PE.sbatch
 
-## hisatIndexDir options: hg38, mm10
-## hisatIndex: hg38.main, mm10.main
+## hisatIndexDir options: hg38, mm10, bosTau8
+## hisatIndex: hg38.main, mm10, bosTau8
 ## rnaStrandness options: FR (forward) or RF (reverse stranded)
 
 ## General settings
@@ -20,7 +20,7 @@
 #SBATCH -N 1
 #SBATCH -n 8
 #SBATCH --time=4:00:00
-#SBATCH --mem=16GB
+#SBATCH --mem=32GB
 
 # Job name and output
 #SBATCH -J hisat2_PE
@@ -49,15 +49,20 @@ pwd; hostname; date
 echo "HISAT2 version: "$(hisat2 --version)
 echo "samtools version: "$(samtools --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
-echo "Starting HISAT2 alignment..."
+echo $(date +"[%b %d %H:%M:%S] Running hisat2...")
 
-hisat2 -p ${numThreads} --rna-strandness ${rnaStrandness} --no-softclip -x ${hisatIndexDir}/${hisatIndex} \
--1 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_bbduk.fastq.gz -2 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_bbduk.fastq.gz \
+hisat2 \
+-p ${numThreads} \
+--rna-strandness ${rnaStrandness} \
+--no-softclip \
+-x ${hisatIndexDir}/${hisatIndex} \
+-1 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_bbduk.fastq.gz \
+-2 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_bbduk.fastq.gz \
 | samtools view -q 10 -Sb - \
-| samtools sort -@ ${numThreads} - -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_bbduk.fastq.gz}.sorted.uniq.bam
+| samtools sort -@ ${numThreads} - -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.uniq.bam
 
 # Create .sorted.uniq.bai index files for upload to UCSC browser
-samtools index ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_bbduk.fastq.gz}.sorted.uniq.bam
+samtools index ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.uniq.bam
 
 echo $(date +"[%b %d %H:%M:%S] Done")
 
