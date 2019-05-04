@@ -65,8 +65,8 @@ trimq=10 \
 tpe \
 tbo \
 literal=AAAAAAAAAAAAAAAAAAAAAAA \
-stats=${outDir}/log/${queriesR1[$SLURM_ARRAY_TASK_ID]}.trimstats.txt \
-refstats=${outDir}/log/${queriesR1[$SLURM_ARRAY_TASK_ID]}.refstats.txt \
-ehist=${outDir}/log/${queriesR1[$SLURM_ARRAY_TASK_ID]}.ehist.txt
+stats=${outDir}/log/${queries[$SLURM_ARRAY_TASK_ID]}.trimstats.txt \
+refstats=${outDir}/log/${queries[$SLURM_ARRAY_TASK_ID]}.refstats.txt \
+ehist=${outDir}/log/${queries[$SLURM_ARRAY_TASK_ID]}.ehist.txt
 
 echo $(date +"[%b %d %H:%M:%S] Done")
