@@ -42,10 +42,13 @@ mkdir -p ${projectName}/fastq/fastqc
 mkdir -p ${projectName}/fastq/fastqc/multiqc
 mkdir -p ${projectName}/fastqc/multiqc
 mkdir -p ${projectName}/bbduk
+mkdir -p ${projectName}/bbduk/log
 mkdir -p ${projectName}/bbduk/fastqc
 mkdir -p ${projectName}/bbduk/fastqc/multiqc
 mkdir -p ${projectName}/hisat2
 mkdir -p ${projectName}/featureCounts
+mkdir -p ${projectName}/bigwigs
 mkdir -p ${projectName}/DESeq2
+mkdir -p ${projectName}/DESeq2/png
 
 echo $(date +"[%b %d %H:%M:%S] Done")
