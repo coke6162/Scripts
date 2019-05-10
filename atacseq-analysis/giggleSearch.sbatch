@@ -4,11 +4,11 @@
 ## Date: 8 May 2019 
 
 ## Example usage:
-## inDir=/Users/coke6162/project20xx_atacseq/macs2 \
+## inDir=/Users/coke6162/project20xx_atacseq/macs2/OCR \
 ## outDir=/Users/coke6162/project20xx_atacseq/giggle/allRep \
 ## repeatIndexDir=/Users/CL_Shared/db/giggle/bosTau8/repeats/indexed \
 ## repeatPath=/Users/CL_Shared/db/giggle/bosTau8/repeats/sorted/ \
-## sbatch --array 0-3 giggle_search.sbatch
+## sbatch --array 0-3 giggleSearch.sbatch
 
 # General settings
 #SBATCH -p short
@@ -29,7 +29,7 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # define query files
-queries=($(ls ${inDir}/*.narrowPeak | xargs -n 1 basename))
+queries=($(ls ${inDir}/*_OCR.bed | xargs -n 1 basename))
 
 # load modules
 module load samtools
@@ -40,39 +40,42 @@ pwd; hostname; date
 echo "samtools version: "$(samtools --version)
 echo "Processing peak file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
-# extract first three columns from peak file to make a simple bed
-echo $(date +"[%b %d %H:%M:%S] Converting peak file to simple bed...")
-
-cat ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
-| awk '{print $1 "\t" $2 "\t" $3}' \
-> ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bed
-
 # bgzip each bed file
 echo $(date +"[%b %d %H:%M:%S] Starting bgzip...")
 
-bgzip ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bed
+bgzip ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}
 
 # run giggle search
 echo $(date +"[%b %d %H:%M:%S] Starting giggle search...")
 
 giggle search \
 -i ${repeatIndexDir} \
--q ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bed.gz \
--s \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bed.gz}.giggleStats.tmp
+-q ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.bed.gz \
+-s -g 2660906405 \
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.giggleStats.tmp
 
-# remove full index name from output & sort by combo score
-echo $(date +"[%b %d %H:%M:%S] Removing full repeat name and sort by combo score...")
+# remove full index name from output
+echo $(date +"[%b %d %H:%M:%S] Removing full repeat name...")
 
-cat ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bed.gz}.giggleStats.tmp \
+awk '(NR>1){print $0}' ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.giggleStats.tmp \
 | sed 's/.bed.gz//g' \
 | sed "s|$repeatPath||g" \
-| sort -k8,8rn \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_slop.bed.gz}.giggleStats
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.giggleStats
+
+# sort output by descending giggle score
+# note: only use unsorted output as input into makeGiggleMatrix.sbatch!
+echo $(date +"[%b %d %H:%M:%S] Sorting by descending combo score...")
+
+sort -k8,8rn ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.giggleStats > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.giggleStats.sorted
 
 # remove temporary file
 echo $(date +"[%b %d %H:%M:%S] Removing intermediate file...")
 
-rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bed.gz}.giggleStats.tmp
+rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.giggleStats.tmp
+
+# decompress bgzip'd OCR bed files
+echo $(date +"[%b %d %H:%M:%S] Decompressing bgzip'd OCR bed files...")
+
+bgzip -d ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.bed.gz
 
 echo $(date +"[%b %d %H:%M:%S] Done")
