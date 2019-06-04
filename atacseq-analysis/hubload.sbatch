@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## Script for uploading bigwigs to UCSC genome browser
-## Date: 2 May 2019
+## Date: 31 May 2019
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/atacseq-analysis
@@ -33,7 +33,7 @@ pwd; hostname; date
 
 echo $(date +"[%b %d %H:%M:%S] Running hubload...")
 
-for i in $(cat ${orderDir}/hubload_order.txt)
+for i in ${inDir}/*bw
 do
 echo "Processing file: "${i}
 /opt/python/2.7.14/bin/python2.7 /Users/CL_Shared/scripts/ed/hubload.py \
