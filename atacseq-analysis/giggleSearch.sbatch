@@ -29,7 +29,7 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # define query files
-queries=($(ls ${inDir}/*DE*_OCR.bed | xargs -n 1 basename))
+queries=($(ls ${inDir}/*_OCR.bed | xargs -n 1 basename))
 
 # load modules
 module load samtools
