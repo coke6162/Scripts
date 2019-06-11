@@ -2,7 +2,11 @@
 
 # R script to make boxplot of obs vs exp overlap from giggle output
 # Example usage:
-# Rscript --vanilla 
+# cd /Users/coke6162/repos/scripts/atacseq-analysis
+# Rscript --vanilla obs_vs_exp_boxplot.R \
+# /Users/coke6162/20190429_ATAC-seq_MDBK/giggle/DE/allRep/MDBK_4h_R1_DE_summits.giggleStats.sorted \
+# /Users/coke6162/repos/scripts/atacseq-analysis/obs_vs_exp_repNames.txt \
+# /Users/coke6162/figures/MDBK_4h_R1_DE_summits_SINE_obs_vs_exp_boxplot.png
 
 args = commandArgs(trailingOnly=TRUE)
 # args[1] = input table
@@ -13,7 +17,6 @@ args = commandArgs(trailingOnly=TRUE)
 library(ggplot2)
 library(reshape2)
 library(ggpubr)
-library(ggsignif)
 
 # Read in table
 data <- read.table(args[1], 
@@ -38,7 +41,7 @@ dataSubset <- melt(dataSubset,
 dataSubset
 
 # Plot
-png(file = args[3], width = 12, height = 6, units = 'in', res = 300)
+pdf(file = args[3], width = 12, height = 6, units = 'in', res = 300)
 
 ggplot(dataSubset) + 
   geom_col(aes(x = name, 
