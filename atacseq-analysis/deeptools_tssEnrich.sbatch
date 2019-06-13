@@ -8,7 +8,6 @@
 ## fileName=bosTau8_ensGene_tss \
 ## wigDir=/Users/coke6162/project20xx_atacseq/bigwigs \
 ## bedFile=/Users/CL_Shared/db/genomes/bosTau8/annotation/bosTau8.ensGene.tss.bed \
-## refDir=/Users/coke6162/repos/project_files/project20xx_atacseq \
 ## outDir=/Users/coke6162/project20xx_atacseq/bowtie2/tss_enrich \
 ## sbatch --array 0-3 deeptools_tssEnrich.sbatch
 
@@ -36,7 +35,7 @@ module load singularity
 deeptools=/scratch/Shares/public/singularity/deeptools-3.0.1-py35_1.img
 
 # Define query files
-queries=($(cat ${refDir}/bigwigs.txt | xargs -n 1 basename))
+queries=($(ls ${wigDir}/*_treat_pileup.bw | xargs -n 1 basename))
 
 # run the thing
 pwd; hostname; date

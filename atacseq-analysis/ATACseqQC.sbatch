@@ -32,9 +32,10 @@
 libraryDir=/Users/coke6162/R/x86_64-redhat-linux-gnu-library/3.5/ATACseqQC/extdata/
 
 # Define query files
-queries=($(ls ${inDir}/*.filtered.sorted.dedup.bam | xargs -n 1 basename))
+queries=($(ls ${inDir}/*.sorted.bam | xargs -n 1 basename))
 
 # Load modules
+module load samtools
 module load R/3.5.1
 
 # Specify R library paths
@@ -65,4 +66,4 @@ echo "Removing bam and bai files from ATACseqQC directory"
 rm ${libraryDir}/${queries[$SLURM_ARRAY_TASK_ID]}
 rm ${libraryDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bai
 
-echo $(date +"[%b %d %H:%M:%S] Done")
+echo $(date +"[%b %d %H:%M:%S]")

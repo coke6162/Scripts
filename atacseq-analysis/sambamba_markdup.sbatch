@@ -50,6 +50,8 @@ ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 | egrep -v chrM \
 | samtools view -bT ${refFile} -o ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.bam
 
+echo $(date +"[%b %d %H:%M:%S]")
+
 # Sort bam files and remove duplicates with sambamba
 echo "Sorting bam files & removing duplicates with sambamba"
 echo "Sambamba version: see stdout"`sambamba --version`
@@ -72,9 +74,30 @@ ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.dedup.bam
 
 rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.bam
 
+echo $(date +"[%b %d %H:%M:%S]")
+
 # Run samtools flagstat 
+echo "Running flagstat"
+
 samtools flagstat \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.dedup.bam \
 > ${outDir}/flagstat/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.dedup.flagstat.txt
+
+echo $(date +"[%b %d %H:%M:%S]")
+
+# Resort dedup output
+echo "Sort dedup bams"
+
+samtools sort \
+-@ ${numThreads} \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.dedup.bam \
+-o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.dedup.resorted.bam
+
+# Index resorted bams
+echo "Index resorted bams"
+
+samtools index \
+-@ {numThreads} \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.dedup.resorted.bam
 
 echo $(date +"[%b %d %H:%M:%S] Done")

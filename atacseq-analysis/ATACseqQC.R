@@ -14,7 +14,7 @@ prefix <- gsub(".sorted.bam", "", args[1])
 
 # Read in bam file living in the ATACseqQC directory
 bamFile <- system.file("extdata", args[1], package="ATACseqQC", mustWork=TRUE)
-bamFileName <- gsub(".bam", "", basename(bamFile))
+bamFileName <- gsub(".sorted.bam", "", basename(bamFile))
 
 # Plot estimated library complexity
 pdfName_libComplex <- paste0(args[2], prefix, "_libComplex.pdf")
