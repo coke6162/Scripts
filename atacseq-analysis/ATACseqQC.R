@@ -32,41 +32,4 @@ fragSize <- fragSizeDist(bamFile, prefix)
 
 dev.off()
 
-# Adjust the read start sites
-tags <- c("AS", "XN", "XM", "XO", "XG", "NM", "MD", "YS", "YT")
-which <- as(seqinfo(Btaurus), "GRanges")
-gal <- readBamFile(bamFile, tag=tags, which=which, asMates=TRUE, bigFile=TRUE)
-gal1 <- shiftGAlignmentsList(gal)
-
-# Generate promoter/transcript body (PT) score
-pdfName_promTran <- paste0(args[2], prefix, "_PT.pdf")
-pdf(pdfName_promTran, width = 6.66, height = 5, useDingbats = FALSE)
-
-txs <- transcripts(TxDb.Btaurus.UCSC.bosTau8.refGene)
-pt <- PTscore(gal1, txs)
-plot(pt$log2meanCoverage, pt$PT_score, 
-     xlab="log2 mean coverage",
-     ylab="Promoter vs Transcript")
-
-dev.off()
-
-# Generate nucleosome free regions (NFR) score
-pdfName_NFR <- paste0(args[2], prefix, "_NFR.pdf")
-pdf(pdfName_NFR, width = 6.66, height = 5, units = in, useDingbats = FALSE)
-
-nfr <- NFRscore(gal1, txs)
-plot(nfr$log2meanCoverage, nfr$NFR_score, 
-     xlab="log2 mean coverage",
-     ylab="Nucleosome Free Regions score",
-     main="NFRscore for 200bp flanking TSSs",
-     xlim=c(-10, 0), ylim=c(-5, 5))
-
-dev.off()
-
-# Generate transcription start site (TSS) enrichment score
-tsse <- TSSEscore(gal1, txs)
-tsse_summary <- summary(tsse$TSS.enrichment.score)
-write.table(tsse, paste0(args[2], prefix, "_tssEnrich.txt"), sep = "\t")
-write.table(tsse, paste0(args[2], prefix, "_tssEnrich_summary.txt"), sep = "\t")
-
 sessionInfo()

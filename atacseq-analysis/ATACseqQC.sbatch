@@ -32,8 +32,7 @@
 libraryDir=/Users/coke6162/R/x86_64-redhat-linux-gnu-library/3.5/ATACseqQC/extdata/
 
 # Define query files
-queries=($(cat ${projectDir}/ATACseqQC_bams.txt | xargs -n 1 basename))
-#queries=($(ls ${inDir}/*.sorted.bam | xargs -n 1 basename))
+queries=($(ls ${inDir}/*.filtered.sorted.dedup.bam | xargs -n 1 basename))
 
 # Load modules
 module load R/3.5.1
