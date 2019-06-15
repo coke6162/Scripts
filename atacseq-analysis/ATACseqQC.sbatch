@@ -29,10 +29,10 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # Define constant variables
-libraryDir=/Users/coke6162/R/x86_64-redhat-linux-gnu-library/3.5/ATACseqQC/extdata/
+libraryDir=/Users/coke6162/R/x86_64-redhat-linux-gnu-library/3.5/ATACseqQC/extdata
 
 # Define query files
-queries=($(ls ${inDir}/*.sorted.bam | xargs -n 1 basename))
+queries=($(ls ${inDir}/*.sam | xargs -n 1 basename | sed 's/.sam//g'))
 
 # Load modules
 module load samtools
@@ -44,26 +44,26 @@ export R_LIBS='/Users/coke6162/R/x86_64-redhat-linux-gnu-library/3.5/'
 # Copy bam and bai files to the ATACseqQC directory
 pwd; hostname; date
 
-echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
+echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam
 
 echo "Copying bam and bai files to ATACseqQC directory"
 
-cp ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} ${libraryDir}
-cp ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bai ${libraryDir}
+cp ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam ${libraryDir}
+cp ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam.bai ${libraryDir}
 
 echo $(date +"[%b %d %H:%M:%S]")
 
 # Run ATACSeqQC R script
 echo "Running ATACseqQC R script"
 
-Rscript ${scriptDir}/ATACseqQC.R ${queries[$SLURM_ARRAY_TASK_ID]} ${outDir}/
+Rscript ${scriptDir}/ATACseqQC.R ${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam ${outDir}/
 
 echo $(date +"[%b %d %H:%M:%S]")
 
 # Remove the bam and bai files from the ATACseqQC directory
 echo "Removing bam and bai files from ATACseqQC directory"
 
-rm ${libraryDir}/${queries[$SLURM_ARRAY_TASK_ID]}
-rm ${libraryDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bai
+rm ${libraryDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam
+rm ${libraryDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam.bai
 
 echo $(date +"[%b %d %H:%M:%S]")
