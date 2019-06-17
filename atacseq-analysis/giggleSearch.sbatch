@@ -79,6 +79,6 @@ rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%${suffix}}.giggleStats.tmp
 # decompress bgzip'd bed files
 echo $(date +"[%b %d %H:%M:%S] Decompressing bgzip'd OCR bed files...")
 
-bgzip -d ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}
+bgzip -d ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.gz
 
 echo $(date +"[%b %d %H:%M:%S] Done")
