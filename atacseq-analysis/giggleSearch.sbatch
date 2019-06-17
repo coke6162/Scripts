@@ -8,6 +8,7 @@
 ## outDir=/Users/coke6162/project20xx_atacseq/giggle/allRep \
 ## repeatIndexDir=/Users/CL_Shared/db/giggle/bosTau8/repeats/indexed \
 ## repeatPath=/Users/CL_Shared/db/giggle/bosTau8/repeats/sorted/ \
+## genomeSize=2660906405 \
 ## sbatch --array 0-3 giggleSearch.sbatch
 
 # General settings
@@ -51,7 +52,7 @@ echo $(date +"[%b %d %H:%M:%S] Starting giggle search...")
 giggle search \
 -i ${repeatIndexDir} \
 -q ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.bed.gz \
--s -g 2660906405 \
+-s -g ${genomeSize} \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.giggleStats.tmp
 
 # remove full index name from output
