@@ -9,7 +9,7 @@
 ## repeatIndexDir=/Users/CL_Shared/db/giggle/bosTau8/repeats/indexed \
 ## repeatPath=/Users/CL_Shared/db/giggle/bosTau8/repeats/sorted/ \
 ## genomeSize=2660906405 \
-## suffix=_OCR.bed \
+## suffix=${suffix} \
 ## sbatch --array 0-3 giggleSearch.sbatch
 
 # General settings
@@ -52,32 +52,33 @@ echo $(date +"[%b %d %H:%M:%S] Starting giggle search...")
 
 giggle search \
 -i ${repeatIndexDir} \
--q ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.bed.gz \
+-q ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.gz \
 -s -g ${genomeSize} \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.giggleStats.tmp
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%${suffix}}.giggleStats.tmp
 
 # remove full index name from output
 echo $(date +"[%b %d %H:%M:%S] Removing full repeat name...")
 
-awk '(NR>1){print $0}' ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.giggleStats.tmp \
+awk '(NR>1){print $0}' ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%${suffix}}.giggleStats.tmp \
 | sed 's/.bed.gz//g' \
 | sed "s|$repeatPath||g" \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.giggleStats
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%${suffix}}.giggleStats
 
 # sort output by descending giggle score
 # note: only use unsorted output as input into makeGiggleMatrix.sbatch!
 echo $(date +"[%b %d %H:%M:%S] Sorting by descending combo score...")
 
-sort -k8,8rn ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.giggleStats > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.giggleStats.sorted
+sort -k8,8rn ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%${suffix}}.giggleStats \
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%${suffix}}.giggleStats.sorted
 
 # remove temporary file
 echo $(date +"[%b %d %H:%M:%S] Removing intermediate file...")
 
-rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.giggleStats.tmp
+rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%${suffix}}.giggleStats.tmp
 
-# decompress bgzip'd OCR bed files
+# decompress bgzip'd bed files
 echo $(date +"[%b %d %H:%M:%S] Decompressing bgzip'd OCR bed files...")
 
-bgzip -d ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]%_OCR.bed}_OCR.bed.gz
+bgzip -d ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}
 
 echo $(date +"[%b %d %H:%M:%S] Done")
