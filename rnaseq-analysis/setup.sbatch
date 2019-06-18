@@ -4,7 +4,9 @@
 ## Date: 4 May 2019
 
 ## Example usage:
-## inDir=/Users/coke6162 projectName=project20xx_rnaseq sbatch setup.sbatch
+## inDir=/Users/coke6162 \
+## projectName=project20xx_rnaseq \
+## sbatch setup.sbatch
 
 # General settings
 #SBATCH -p short
