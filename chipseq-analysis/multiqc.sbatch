@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ## Script for running multiqc
-## Date: 31 Jan 2019 
+## Date: 28 June 2019
 
 ## Example usage:
-## inDir=/Users/coke6162/project20xx_chipseq/fastqc \
-## outDir=/Users/coke6162/project20xx_chipseq/fastqc/multiqc \
+## inDir=/Users/coke6162/project20xx_chipseq/fastq/fastqc \
+## outDir=/Users/coke6162/project20xx_chipseq/fastq/fastqc/multiqc \
 ## sbatch multiqc.sbatch
 
 # General settings
@@ -25,13 +25,22 @@
 #SBATCH --mail-type=FAIL                                        
 #SBATCH --mail-user=coke6162@colorado.edu
 
+# load modules
+module load singularity
+
+# define key variables
+multiqc=/scratch/Shares/public/singularity/multiqc-1.7.img
+
 # Run MultiQC
 pwd; hostname; date
 
-echo "MultiQC version: "$(multiqc --version)
-echo $(date +"[%b %d %H:%M:%S] Running multiqc...")
+echo "Singularity version: "$(singularity --version)
+echo "MultiQC version: "$(singularity exec --bind /Users/CL_Shared ${multiqc} multiqc --version)
+echo $(date +"[%b %d %H:%M:%S] Running MultiQC...")
 
-multiqc ${inDir}/*.zip --outdir ${outDir}
+singularity exec --bind /Users/CL_Shared ${multiqc} \
+multiqc \
+${inDir}/*.zip \
+--outdir ${outDir}
 
 echo $(date +"[%b %d %H:%M:%S] Done")
-
