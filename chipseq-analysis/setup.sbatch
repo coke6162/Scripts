@@ -38,10 +38,12 @@ mkdir -p ${projectName}
 
 # make necessary subdirs
 mkdir -p ${projectName}/fastq
-mkdir -p ${projectName}/fastqc
-mkdir -p ${projectName}/fastqc/multiqc
-mkdir -p ${projectName}/trimmomatic
-mkdir -p ${projectName}/trimmomatic/log
+mkdir -p ${projectName}/fastq/fastqc
+mkdir -p ${projectName}/fastq/fastqc/multiqc
+mkdir -p ${projectName}/bbduk
+mkdir -p ${projectName}/bbduk/log
+mkdir -p ${projectName}/bbduk/fastqc
+mkdir -p ${projectName}/bbduk/fastqc/multiqc
 mkdir -p ${projectName}/bwa
 mkdir -p ${projectName}/macs2
 mkdir -p ${projectName}/bigwig
