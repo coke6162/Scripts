@@ -4,14 +4,17 @@
 ## Date: 13 March 2019
 
 ## Example usage:
-## inDir=/Users/coke6162 projectName=mostafavi2016_chipseq sbatch --array 0-40 /Users/coke6162/repos/scripts/chipseq-analysis/sraDownload.sbatch
+## cd /Users/coke6162/repos/scripts/chipseq-analysis/
+## inDir=/Users/coke6162 \
+## projectName=project20xx_chipseq \
+## sbatch --array 0-40 sraDownload.sbatch
 
 # General settings
 #SBATCH -p short
 #SBATCH -N 1
 #SBATCH -c 1
-#SBATCH --time=18:00:00
-#SBATCH --mem=64GB
+#SBATCH --time=6:00:00
+#SBATCH --mem=32GB
 
 # Job name and output
 #SBATCH -J sraDownload
@@ -27,7 +30,7 @@
 module load sra
 
 # set query files
-queries=($(cat ${inDir}/repos/project_files/${projectName}.txt | grep -v "#" | awk '{print $2}'))
+queries=($(cat ${inDir}/repos/project_files/sraDownload.txt | awk '(NR>1){print $1}'))
 
 # run the thing
 pwd; hostname; date
