@@ -1,14 +1,12 @@
 #!/bin/bash
 
 ## Script for running MACS2
-## Date: 14 March 2019 
+## Date: 10 July 2019 
 
 ## Example usage:
-## projectFile=/Users/coke6162/repos/project_files/project20xx_chipseq_macs2.sh
-## bash ${projectFile}
-
-## example line from ${projectFile}:
-## inDir=/Users/coke6162/project20xx_chipseq/bwa outDir=/Users/coke6162/project20xx_chipseq/macs2 treatFile=stat1_ifng_4h.sorted.uniq.bam controlFile=stat1_input.sorted.uniq.bam -n stat1_ifng_4h -g mm sbatch /Users/coke6162/repos/scripts/chipseq-analysis/macs2_SE.sbatch
+## cd /Users/coke6162/repos/project_files/project20xx_chipseq
+## inDir=/Users/coke6162/project20xx_chipseq/bwa \
+## bash runMacs2.sh
 
 ## General settings
 #SBATCH -p short
@@ -39,7 +37,14 @@ echo "Control file: "${controlFile}
 echo "Genome size: "${genomeSize}
 echo $(date +"[%b %d %H:%M:%S] Starting MACS2 peak calling...")
 
-macs2 callpeak -t ${inDir}/${treatFile} -c ${inDir}/${controlFile} -n ${name} -B --SPMR -g ${genomeSize} -f BAM --outdir ${outDir}
+macs2 callpeak \
+-t ${treatFile} \
+-c ${controlFile} \
+-n ${name} \
+-B --SPMR \
+-g ${genomeSize} \
+-f BAM \
+--outdir ${outDir}
 
 echo $(date +"[%b %d %H:%M:%S] Done")
 
