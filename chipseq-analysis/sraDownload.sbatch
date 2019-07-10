@@ -30,7 +30,7 @@
 module load sra
 
 # set query files
-queries=($(cat ${inDir}/repos/project_files/sraDownload.txt | awk '(NR>1){print $1}'))
+queries=($(cat ${inDir}/repos/project_files/${projectName}/sraDownload.txt | awk '(NR>1){print $1}'))
 
 # run the thing
 pwd; hostname; date
