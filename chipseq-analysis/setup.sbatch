@@ -1,10 +1,12 @@
 #!/bin/bash
 
 ## Script to set up directory layout 
-## Date: 13 March 2019
+## Date: 10 July 2019
 
 ## Example usage:
-## inDir=/Users/coke6162 projectName=project20xx_chipseq sbatch setup.sbatch
+## inDir=/Users/coke6162 \
+## projectName=project20xx_chipseq \
+## sbatch setup.sbatch
 
 # General settings
 #SBATCH -p short
@@ -37,6 +39,7 @@ cd ${inDir}
 mkdir -p ${projectName}
 
 # make necessary subdirs
+mkdir -p repos/project_files/${projectName}
 mkdir -p ${projectName}/fastq
 mkdir -p ${projectName}/fastq/fastqc
 mkdir -p ${projectName}/fastq/fastqc/multiqc
