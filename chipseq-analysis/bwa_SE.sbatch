@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## Script for running bwa
-## Date: 31 Jan 2019 
+## Date: 10 July 2019 
 
 ## Example usage:
 ## inDir=/Users/coke6162/project20xx_chipseq/trimmomatic \
@@ -34,7 +34,7 @@
 module load bwa/0.7.15 samtools/1.8
 
 # Define query files
-queries=($(ls ${inDir}/*_trimmed.fastq.gz | xargs -n 1 basename))
+queries=($(ls ${inDir}/*.fastq.gz | xargs -n 1 basename))
 
 # Run bwa
 pwd; hostname; date
@@ -44,11 +44,13 @@ echo "samtools version: "$(samtools --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
 echo $(date +"[%b %d %H:%M:%S] Starting bwa alignment...")
-echo $(date +"[%b %d %H:%M:%S] Converting bams to sams, filtering out low quality reads, and sorting..."
+echo $(date +"[%b %d %H:%M:%S] Converting bams to sams, filtering out low quality reads, and sorting...")
 
-bwa mem -t 8 ${bwaIndexDir}/${bwaIndex} ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
+bwa mem -t 8 \
+${bwaIndexDir}/${bwaIndex} \
+${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 | samtools view -Sb -q 10 - \
-| samtools sort -@ 8 - -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_trimmed.fastq.gz}.sorted.uniq.bam
+| samtools sort -@ 8 - -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.fastq.gz}.sorted.uniq.bam
 
 echo $(date +"[%b %d %H:%M:%S] Done")
 
