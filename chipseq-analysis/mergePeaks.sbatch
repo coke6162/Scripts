@@ -1,11 +1,13 @@
 #!/bin/bash
 
 ## Script for merging peaks from all samples in a batch
-## Date: 16 March 2019 
+## Date: 11 July 2019
 
 ## Example usage:
-## inDir=/Users/coke6162/project20xx_chipseq/macs2/filtered_peaks \
-## projectName=project20xx_chipseq\
+## cd /Users/coke6162/repos/scripts/chipseq-analysis
+## fileType=narrowPeak.filtered \
+## inDir=/Users/coke6162/project20xx_chipseq/macs2 \
+## projectName=project20xx_chipseq \
 ## sbatch mergePeaks.sbatch
 
 # General settings
@@ -17,8 +19,8 @@
 
 # Job name and output
 #SBATCH -J mergePeaks
-#SBATCH -o /Users/%u/sbatch_script/output/slurm-%A_%a.out
-#SBATCH -e /Users/%u/sbatch_script/error/slurm-%A_%a.err
+#SBATCH -o /Users/%u/sbatch_script/output/slurm-%j.out
+#SBATCH -e /Users/%u/sbatch_script/error/slurm-%j.err
 
 # Email notifications 
 #SBATCH --mail-type=END                                         
@@ -28,27 +30,47 @@
 # Load modules
 module load bedtools
 
-# Merge peaks from all samples
+# Concatenate all narrowPeak regions from pol2 pulldowns
 pwd; hostname; date
 
-echo "Merging peaks from all samples..."
+echo "Merging narrowPeak regions from all samples"
+echo "bedtools version: "$(bedtools --version)
 
-# Go to dir
-cd ${inDir}
+cat ${inDir}/*${fileType} > ${outDir}/all_${fileType}.tmp
 
-# Concatenate all narrowPeak regions from all samples
-cat *.narrowPeak.filtered > "$projectName"_all.tmp
+echo $(date +"[%b %d %H:%M:%S]")
 
-# Sort and merge intervals within 100bp from each other
-bedtools sort -i "$projectName"_all.tmp > "$projectName"_all_sorted.tmp
-bedtools merge -i "$projectName"_all_sorted.tmp -d 100 > "$projectName"_all_sorted_merged100bp.tmp
+# Sort
+echo "Sorting regions..."
+
+bedtools sort \
+-i ${outDir}/all_${fileType}.tmp \
+> ${outDir}/all_${fileType}_sorted.tmp
+
+echo $(date +"[%b %d %H:%M:%S]")
+
+# Merge intervals within 100bp from each other
+echo "Merging intervals within 100bp from each other..."
+
+bedtools merge \
+-i ${outDir}/all_${fileType}_sorted.tmp \
+-d 100 \
+> ${outDir}/all_${fileType}_sorted_merged100bp.tmp
+
+echo $(date +"[%b %d %H:%M:%S]")
 
 # Label the regions
-cat "$projectName"_all_sorted_merged100bp.tmp \
+echo "Labeling the regions..."
+
+cat ${outDir}/all_${fileType}_sorted_merged100bp.tmp \
 | awk '{print $0 "\t" "region"NR}' \
-> all_"$projectName".narrowPeaks
+> ${outDir}/all_${fileType}
+
+echo $(date +"[%b %d %H:%M:%S]")
 
 # Remove tmp files
-rm *.tmp
+echo "Removing intermediate files..."
+
+rm ${outDir}/*.tmp
 
 echo $(date +"[%b %d %H:%M:%S] Done")
