@@ -7,8 +7,8 @@
 ## cd /Users/coke6162/repos/scripts/chipseq-analysis
 ## inDir=/Users/coke6162/project20xx_chipseq/macs2 \
 ## outDir=/Users/coke6162/project20xx_chipseq/bigwigs \
-## chromSizesFile=/Users/CL_Shared/db/genomes/mm10/fa/mm10.chrom.sizes \
-## sbatch --array 0-42 bedGraphToBigWig.sbatch 
+## chromSizes=/Users/CL_Shared/db/genomes/mm10/fa/mm10.chrom.sizes \
+## sbatch --array 0-42 bedGraphToBigWig.sbatch
 
 # General settings
 #SBATCH -p short
@@ -28,7 +28,7 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # Define query files
-queries=($(ls ${inDir}/*treat*.bdg | xargs -n 1 basename))
+queries=($(ls ${inDir}/*.bdg | xargs -n 1 basename))
 
 # Convert bedgraphs to bigwigs
 pwd; hostname; date
@@ -36,16 +36,17 @@ pwd; hostname; date
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 echo $(date +"[%b %d %H:%M:%S] Sorting bedgraph...")
 
-sort -k1,1 -k2,2n \
+sort \
+-k1,1 -k2,2n \
 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bdg}.sorted.bdg
 
 echo $(date +"[%b %d %H:%M:%S] Converting sorted bedgraph to bigwig...")
 echo "bedGraphToBigWig v 4"
 
-bedGraphToBigWig \
+/Users/CL_Shared/programs/ucsc/bedGraphToBigWig \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bdg}.sorted.bdg \
-${chromSizesFile} \
+${chromSizes} \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bdg}.bw
 
 echo $(date +"[%b %d %H:%M:%S] Removing sorted bedgraph...")
