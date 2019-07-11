@@ -5,6 +5,7 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/chipseq-analysis
+## pulldown=STAT1 \
 ## fileType=narrowPeak.filtered \
 ## inDir=/Users/coke6162/project20xx_chipseq/macs2 \
 ## projectName=project20xx_chipseq \
@@ -36,7 +37,7 @@ pwd; hostname; date
 echo "Merging narrowPeak regions from all samples"
 echo "bedtools version: "$(bedtools --version)
 
-cat ${inDir}/*${fileType} > ${outDir}/all_${fileType}.tmp
+cat ${inDir}/*${pulldown}*${fileType} > ${outDir}/all_${pulldown}_${fileType}.tmp
 
 echo $(date +"[%b %d %H:%M:%S]")
 
@@ -44,8 +45,8 @@ echo $(date +"[%b %d %H:%M:%S]")
 echo "Sorting regions..."
 
 bedtools sort \
--i ${outDir}/all_${fileType}.tmp \
-> ${outDir}/all_${fileType}_sorted.tmp
+-i ${outDir}/all_${pulldown}_${fileType}.tmp \
+> ${outDir}/all_${pulldown}_${fileType}_sorted.tmp
 
 echo $(date +"[%b %d %H:%M:%S]")
 
@@ -53,18 +54,18 @@ echo $(date +"[%b %d %H:%M:%S]")
 echo "Merging intervals within 100bp from each other..."
 
 bedtools merge \
--i ${outDir}/all_${fileType}_sorted.tmp \
+-i ${outDir}/all_${pulldown}_${fileType}_sorted.tmp \
 -d 100 \
-> ${outDir}/all_${fileType}_sorted_merged100bp.tmp
+> ${outDir}/all_${pulldown}_${fileType}_sorted_merged100bp.tmp
 
 echo $(date +"[%b %d %H:%M:%S]")
 
 # Label the regions
 echo "Labeling the regions..."
 
-cat ${outDir}/all_${fileType}_sorted_merged100bp.tmp \
+cat ${outDir}/all_${pulldown}_${fileType}_sorted_merged100bp.tmp \
 | awk '{print $0 "\t" "region"NR}' \
-> ${outDir}/all_${fileType}
+> ${outDir}/all_${pulldown}_${fileType}
 
 echo $(date +"[%b %d %H:%M:%S]")
 
