@@ -6,9 +6,10 @@
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/chipseq-analysis
 ## pulldown=STAT1 \
+## treatment=1.5h_IFNg \
 ## fileType=narrowPeak.filtered \
 ## inDir=/Users/coke6162/project20xx_chipseq/macs2 \
-## projectName=project20xx_chipseq \
+## outDir=/Users/coke6162/project20xx_chipseq/DESeq2 \
 ## sbatch mergePeaks.sbatch
 
 # General settings
@@ -37,7 +38,7 @@ pwd; hostname; date
 echo "Merging narrowPeak regions from all samples"
 echo "bedtools version: "$(bedtools --version)
 
-cat ${inDir}/*${pulldown}*${fileType} > ${outDir}/all_${pulldown}_${fileType}.tmp
+cat ${inDir}/*${pulldown}*${treatment}*${fileType} > ${outDir}/all_${pulldown}_${treatment}_${fileType}.tmp
 
 echo $(date +"[%b %d %H:%M:%S]")
 
@@ -45,8 +46,8 @@ echo $(date +"[%b %d %H:%M:%S]")
 echo "Sorting regions..."
 
 bedtools sort \
--i ${outDir}/all_${pulldown}_${fileType}.tmp \
-> ${outDir}/all_${pulldown}_${fileType}_sorted.tmp
+-i ${outDir}/all_${pulldown}_${treatment}_${fileType}.tmp \
+> ${outDir}/all_${pulldown}_${treatment}_${fileType}_sorted.tmp
 
 echo $(date +"[%b %d %H:%M:%S]")
 
@@ -54,24 +55,26 @@ echo $(date +"[%b %d %H:%M:%S]")
 echo "Merging intervals within 100bp from each other..."
 
 bedtools merge \
--i ${outDir}/all_${pulldown}_${fileType}_sorted.tmp \
+-i ${outDir}/all_${pulldown}_${treatment}_${fileType}_sorted.tmp \
 -d 100 \
-> ${outDir}/all_${pulldown}_${fileType}_sorted_merged100bp.tmp
+> ${outDir}/all_${pulldown}_${treatment}_${fileType}_sorted_merged100bp.tmp
 
 echo $(date +"[%b %d %H:%M:%S]")
 
 # Label the regions
 echo "Labeling the regions..."
 
-cat ${outDir}/all_${pulldown}_${fileType}_sorted_merged100bp.tmp \
+cat ${outDir}/all_${pulldown}_${treatment}_${fileType}_sorted_merged100bp.tmp \
 | awk '{print $0 "\t" "region"NR}' \
-> ${outDir}/all_${pulldown}_${fileType}
+> ${outDir}/all_${pulldown}_${treatment}_${fileType}
 
 echo $(date +"[%b %d %H:%M:%S]")
 
 # Remove tmp files
 echo "Removing intermediate files..."
 
-rm ${outDir}/*.tmp
+rm ${outDir}/all_${pulldown}_${treatment}_${fileType}.tmp
+rm ${outDir}/all_${pulldown}_${treatment}_${fileType}_sorted.tmp
+rm ${outDir}/all_${pulldown}_${treatment}_${fileType}_sorted_merged100bp.tmp
 
 echo $(date +"[%b %d %H:%M:%S] Done")
