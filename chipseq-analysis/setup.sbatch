@@ -49,7 +49,7 @@ mkdir -p ${projectName}/bbduk/fastqc
 mkdir -p ${projectName}/bbduk/fastqc/multiqc
 mkdir -p ${projectName}/bwa
 mkdir -p ${projectName}/macs2
-mkdir -p ${projectName}/bigwig
+mkdir -p ${projectName}/bigwigs
 mkdir -p ${projectName}/giggle
 mkdir -p ${projectName}/DESeq2
 
