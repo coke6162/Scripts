@@ -35,7 +35,7 @@ numThreads=8
 
 # Set query files
 # note: remove R1/R2 to generate a unique identifier for each pair of files
-queries=($(ls ${inDir}/*_trimmed.fastq.gz | xargs -n 1 basename))
+queries=($(ls ${inDir}/*.fastq.gz | xargs -n 1 basename))
 
 # Load hisat2 and samtools
 module load hisat2 samtools
@@ -51,10 +51,10 @@ echo "Starting HISAT2 alignment..."
 hisat2 -p ${numThreads} --no-softclip -x ${hisatIndexDir}/${hisatIndex} \
 -U ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 | samtools view -q 10 -Sb - \
-| samtools sort -@ ${numThreads} - -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_trimmed.fastq.gz}.sorted.uniq.bam
+| samtools sort -@ ${numThreads} - -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.fastq.gz}.sorted.uniq.bam
 
 # Create .sorted.uniq.bai index files for upload to UCSC browser
-samtools index ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_trimmed.fastq.gz}.sorted.uniq.bam
+samtools index ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.fastq.gz}.sorted.uniq.bam
 
 echo $(date +"[%b %d %H:%M:%S] Done")
 
