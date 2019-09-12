@@ -51,6 +51,7 @@ mkdir -p ${projectName}/bowtie2/tmp
 mkdir -p ${projectName}/bowtie2/flagstat
 mkdir -p ${projectName}/bowtie2/dedup
 mkdir -p ${projectName}/bowtie2/dedup/flagstat
+mkdir -p ${projectName}/bigwigs
 mkdir -p ${projectName}/macs2
 mkdir -p ${projectName}/seacr
 mkdir -p ${projectName}/bigwig
