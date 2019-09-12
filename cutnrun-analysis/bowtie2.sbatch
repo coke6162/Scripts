@@ -93,12 +93,15 @@ samtools index \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sorted.bam \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sorted.bam.bai
 
-# Convert to bed & add fragment length (column 4)
+# Convert to BEDPE & filter out fragments greater than 1kb
 echo "Converting bam to bed"
-bamToBed -i ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sorted.bam \
-| sort -k 1,1 -k2,2n - \
-| awk -v OFS='\t' '{len = $3 - $2; print $0, len }' - \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sorted.bed
+bamToBed -bedpe -i ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sorted.bam \
+| awk '$1==$4 && $6-$2 < 1000 {print $0}' - \
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_d1000.sorted.bed
+
+# Select the 5' and 3' coordinates of the read pair to generate a new BED3 file
+cut -f 1,2,6 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_d1000.sorted.bed \
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_d1000_fragments.sorted.bed
 
 # Determine percentage of total reads that mapped to mitochondrial genes
 echo "Calculate percentage of total reads mapping to mitochondrial genes"
