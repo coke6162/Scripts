@@ -54,7 +54,7 @@ normFactor=`echo "10000 / ${spikeCount}" | bc -l`
 echo "normFactor =" ${normFactor}
 
 # Generate normalized bedgraphs
-echo "Generating non-normalized bedgraphs..."
+echo "Generating normalized bedgraphs..."
 bedtools genomecov \
 -bga \
 -scale ${normFactor} \
