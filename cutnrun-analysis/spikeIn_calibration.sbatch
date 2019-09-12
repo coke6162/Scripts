@@ -20,7 +20,7 @@
 #SBATCH --mem=64G
 
 # Job name and output
-#SBATCH -J bowtie2
+#SBATCH -J spikeIn_cal
 #SBATCH -o /Users/%u/sbatch_script/output/slurm-%A_%a.out
 #SBATCH -e /Users/%u/sbatch_script/error/slurm-%A_%a.err
 
@@ -38,7 +38,7 @@ module load bedtools
 # Define query files
 queries=($(ls ${inDir}/*.sam | xargs -n 1 basename | sed 's/_'${expName}'.sam//g' | sed 's/_'${spikeName}'.sam//g' | uniq))
 
-# Determine normalization factor (number of reads mapping to E. coli per 10,000 reads) used to generate normalized bedgraph
+# Determine normalization factor (number of reads mapping to E. coli per 100 reads) used to generate normalized bedgraph
 pwd; hostname; date
 
 echo "Aligning reads to the genome & outputting sam files"
@@ -50,15 +50,16 @@ echo "Number of reads mapping to bosTau9: "$(wc -l ${inDir}/${queries[$SLURM_ARR
 echo "Number of reads mapping to E. coli: "$(wc -l ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_Ecoli_d1000_fragments.sorted.bed)
 
 spikeCount=`wc -l ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_Ecoli_d1000_fragments.sorted.bed | awk '{print $1}'`
-normFactor=`echo "10000 / ${spikeCount}" | bc -l`
+normFactor=`echo "100 / ${spikeCount}" | bc -l`
 echo "normFactor =" ${normFactor}
 
 # Generate normalized bedgraphs
 echo "Generating normalized bedgraphs..."
-bedtools genomecov \
+sort -k1,1 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_bosTau9.main_d1000_fragments.sorted.bed \
+| bedtools genomecov \
 -bga \
 -scale ${normFactor} \
--i ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_bosTau9.main_d1000_fragments.sorted.bed \
+-i - \
 -g ${genomeChrFile} \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_bosTau9.main_d1000_fragments.bdg
 
