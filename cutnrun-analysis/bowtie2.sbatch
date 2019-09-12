@@ -95,7 +95,11 @@ ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sorted.bam \
 
 # Convert to BEDPE & filter out fragments greater than 1kb
 echo "Converting bam to bed"
-bamToBed -bedpe -i ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sorted.bam \
+
+samtools sort \
+-n ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sorted.bam \
+| samtools fixmate - - \
+| bamToBed -bedpe -i - \
 | awk '$1==$4 && $6-$2 < 1000 {print $0}' - \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_d1000.sorted.bed
 
