@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## Script for uploading bigwigs to UCSC genome browser
-## Date: 11 September 2019
+## Date: 13 September 2019
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis
@@ -33,7 +33,17 @@ pwd; hostname; date
 
 echo $(date +"[%b %d %H:%M:%S] Running hubload...")
 
-for i in ${inDir}/*bw
+for i in ${inDir}/*unNorm.bw
+do
+echo "Processing file: "${i}
+/opt/python/2.7.14/bin/python2.7 /Users/CL_Shared/scripts/ed/hubload.py \
+--input ${i} \
+--supertrack ${projectName} \
+--trackDb ${trackDb}
+echo $(date +"[%b %d %H:%M:%S] Done")
+done
+
+for i in ${inDir}/*.sorted.bam
 do
 echo "Processing file: "${i}
 /opt/python/2.7.14/bin/python2.7 /Users/CL_Shared/scripts/ed/hubload.py \
