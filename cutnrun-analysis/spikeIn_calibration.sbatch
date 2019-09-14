@@ -57,7 +57,7 @@ echo "normFactor =" ${normFactor}
 echo "Generating normalized bedgraphs..."
 sort -k1,1 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_bosTau9.main_d1000_fragments.sorted.bed \
 | bedtools genomecov \
--bga \
+-bg \
 -scale ${normFactor} \
 -i - \
 -g ${genomeChrFile} \
