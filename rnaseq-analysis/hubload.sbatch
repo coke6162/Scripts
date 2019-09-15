@@ -45,4 +45,14 @@ echo "Processing file: "${i}
 echo $(date +"[%b %d %H:%M:%S] Done")
 done
 
+for i in ${inDir}/*.bam
+do
+echo "Processing file: "${i}
+/opt/python/2.7.14/bin/python2.7 /Users/CL_Shared/scripts/ed/hubload.py \
+--input ${i} \
+--supertrack ${projectName} \
+--trackDb ${trackDb}
+echo $(date +"[%b %d %H:%M:%S] Done")
+done
+
 echo $(date +"[%b %d %H:%M:%S] Done")
