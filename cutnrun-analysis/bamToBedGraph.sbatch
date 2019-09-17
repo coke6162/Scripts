@@ -20,7 +20,7 @@
 #SBATCH --mem=64G
 
 # Job name and output
-#SBATCH -J spikeIn_cal
+#SBATCH -J bamToBdg
 #SBATCH -o /Users/%u/sbatch_script/output/slurm-%A_%a.out
 #SBATCH -e /Users/%u/sbatch_script/error/slurm-%A_%a.err
 
