@@ -49,7 +49,7 @@ echo "Bedtools version: "$(bedtools --version)
 echo "Processing file: "${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam
 
 samtools sort \
--@ 8 \
+-@ ${numThreads} \
 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}.sorted.bam \
 | bedtools genomecov \
 -bg \
