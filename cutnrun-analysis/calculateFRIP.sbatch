@@ -49,7 +49,7 @@ echo "Processing file: "${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}
 
 echo "Setting variable equal to total number of reads..."
 
-totalReads=`samtools view -c ${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}_bosTau9.main.sorted.bam`
+totalReads=`samtools view -c ${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}.sorted.bam`
 
 echo "Total number of reads: "$(echo $totalReads)
 
@@ -58,7 +58,7 @@ echo $(date +"[%b %d %H:%M:%S] Setting a vairable equal to the number of reads i
 
 peakReads=`bedtools sort -i ${peakDir}/${queries[$SLURM_ARRAY_TASK_ID]}_peaks.narrowPeak \
 | bedtools merge -i - \
-| bedtools intersect -u -nonamecheck -a ${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}_bosTau9.main.sorted.bam -b - -ubam \
+| bedtools intersect -u -nonamecheck -a ${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}.sorted.bam -b - -ubam \
 | samtools view -c`
 
 echo "Number of reads in peaks: "$(echo $peakReads)
