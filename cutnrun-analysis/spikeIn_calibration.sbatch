@@ -38,7 +38,7 @@ module load bedtools
 # Define query files
 queries=($(ls ${inDir}/*.sam | xargs -n 1 basename | sed 's/_'${expName}'.sam//g' | sed 's/_'${spikeName}'.sam//g' | uniq))
 
-# Determine normalization factor (number of reads mapping to E. coli per 100 reads) used to generate normalized bedgraph
+# Determine normalization factor (number of reads mapping to E. coli per 10000 reads) used to generate normalized bedgraph
 pwd; hostname; date
 
 echo "Aligning reads to the genome & outputting sam files"
@@ -50,7 +50,7 @@ echo "Number of reads mapping to bosTau9: "$(wc -l ${inDir}/${queries[$SLURM_ARR
 echo "Number of reads mapping to E. coli: "$(wc -l ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_Ecoli_d1000_fragments.sorted.bed)
 
 spikeCount=`wc -l ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_Ecoli_d1000_fragments.sorted.bed | awk '{print $1}'`
-normFactor=`echo "100 / ${spikeCount}" | bc -l`
+normFactor=`echo "10000 / ${spikeCount}" | bc -l`
 echo "normFactor =" ${normFactor}
 
 # Generate normalized bedgraphs
