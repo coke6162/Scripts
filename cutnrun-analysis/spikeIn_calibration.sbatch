@@ -61,6 +61,6 @@ sort -k1,1 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_bosTau9.main_d1000_fragment
 -scale ${normFactor} \
 -i - \
 -g ${genomeChrFile} \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_bosTau9.main_d1000_fragments.bdg
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_bosTau9.main_d1000_fragments_spikeCal.bdg
 
 echo $(date +"[%b %d %H:%M:%S] Done")
