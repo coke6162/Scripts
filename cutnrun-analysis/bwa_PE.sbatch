@@ -9,6 +9,7 @@
 ## outDir=/Users/coke6162/project20xx_cutnrun/bwa \
 ## bwaIndexDir=/Users/CL_Shared/db/genomes/bosTau9/index/bwa \
 ## bwaIndex=bosTau9.main.fa \
+## genomeChrFile=/Users/CL_Shared/db/genomes/bosTau9/fa/bosTau9.main.chrom.sizes.fa \
 ## sbatch --array 0-5 bwa_PE.sbatch
 
 ## bwaIndexDir options: hg38, mm10, bosTau8, bosTau9, canFam3
@@ -110,6 +111,16 @@ echo $(date +"[%b %d %H:%M:%S] Extract read pair coordinates to generate BED3...
 cut -f 1,2,6 \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_d1000.sorted.bed \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_d1000_fragments.sorted.bed
+
+# Convert the BED3 files into bedgraphs
+echo $(date +"[%b %d %H:%M:%S] Generating bedgraph files...")
+
+sort -k1,1 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_d1000_fragments.sorted.bed \
+| bedtools genomecov \
+-bg \
+-i - \
+-g ${genomeChrFile} \
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_bosTau9.main_d1000_fragments.bdg
 
 # Determine percentage of total reads that mapped to mitochondrial genes
 echo $(date +"[%b %d %H:%M:%S] Calculating percentage of total reads mapping to mitochondrial genes")
