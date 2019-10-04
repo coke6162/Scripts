@@ -6,8 +6,8 @@
 ## Example usage:
 ## inDir=/Users/coke6162/project20xx_cutnrun/macs2 \
 ## outDir=/Users/coke6162/project20xx_cutnrun/giggle/non-DE/allRep \
-## repeatIndexDir=/Users/CL_Shared/db/giggle/bosTau8/repeats/indexed \
-## repeatPath=/Users/CL_Shared/db/giggle/bosTau8/repeats/sorted/ \
+## repeatIndexDir=/Shares/CL_Shared/db/giggle/bosTau8/repeats/indexed \
+## repeatPath=/Shares/CL_Shared/db/giggle/bosTau8/repeats/sorted/ \
 ## genomeSize=2660906405 \
 ## suffix=narrowPeak \
 ## sbatch --array 0-3 giggleSearch.sbatch
@@ -55,7 +55,7 @@ bgzip ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bed
 # run giggle search
 echo $(date +"[%b %d %H:%M:%S] Starting giggle search...")
 
-giggle search \
+/Shares/CL_Shared/scripts/atma/giggle/bin/giggle search \
 -i ${repeatIndexDir} \
 -q ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bed.gz \
 -s -g ${genomeSize} \
