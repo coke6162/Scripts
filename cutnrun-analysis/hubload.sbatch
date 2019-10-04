@@ -36,7 +36,7 @@ echo $(date +"[%b %d %H:%M:%S] Running hubload...")
 for i in ${inDir}/*.bw
 do
 echo "Processing file: "${i}
-/opt/python/2.7.14/bin/python2.7 /Users/CL_Shared/scripts/ed/hubload.py \
+/opt/python/2.7.14/bin/python2.7 /Shares/CL_Shared/scripts/ed/hubload.py \
 --input ${i} \
 --supertrack ${projectName} \
 --trackDb ${trackDb}
@@ -46,7 +46,7 @@ done
 for i in ${inDir}/*.sorted.bam
 do
 echo "Processing file: "${i}
-/opt/python/2.7.14/bin/python2.7 /Users/CL_Shared/scripts/ed/hubload.py \
+/opt/python/2.7.14/bin/python2.7 /Shares/CL_Shared/scripts/ed/hubload.py \
 --input ${i} \
 --supertrack ${projectName} \
 --trackDb ${trackDb}

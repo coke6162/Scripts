@@ -4,7 +4,7 @@
 ## Date: 2 May 2019
 
 ## Example usage:
-## /Users/coke6162/repos/scripts/atacseq-analysis
+## cd /Users/coke6162/repos/scripts/atacseq-analysis
 ## inDir=/Users/coke6162/project20xx_atacseq/macs2 \
 ## outDir=/Users/coke6162/project20xx_atacseq/bigwigs \
 ## chromSizes=/Users/CL_Shared/db/genomes/bosTau8/fa/bosTau8.chrom.sizes

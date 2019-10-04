@@ -37,7 +37,7 @@ module load samtools
 module load bedtools
 
 # Define query files
-queries=($(ls ${inDir}/*.sam | xargs -n 1 basename | sed 's/_'${expName}'.sam//g' | sed 's/_'${spikeName}'.sam//g' | uniq))
+queries=($(ls ${inDir}/*_filtered.sorted.bam | xargs -n 1 basename | sed 's/_'${expName}'_filtered.sorted.bam//g' | sed 's/_'${spikeName}'_filtered.sorted.bam//g' | uniq))
 
 # Generate un-normalized bedgraphs
 pwd; hostname; date
@@ -46,14 +46,14 @@ echo "Generate un-normalized bedgraphs..."
 echo "Samtools version: "$(samtools --version)
 echo "Bedtools version: "$(bedtools --version)
 
-echo "Processing file: "${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam
+echo "Processing file: "${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam
 
 samtools sort \
 -@ ${numThreads} \
-${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}.sorted.bam \
+${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}_filtered.sorted.bam \
 | bedtools genomecov \
 -bg \
 -ibam - \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}_unNorm.bdg
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}_filtered_unNorm.bdg
 
 echo $(date +"[%b %d %H:%M:%S] Done")

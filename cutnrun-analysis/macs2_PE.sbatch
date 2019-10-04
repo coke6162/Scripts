@@ -5,7 +5,7 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis
-## inDir=/Users/coke6162/project20xx_cutnrun/bowtie2 \
+## inDir=/Users/coke6162/project20xx_cutnrun/bowtie2/filtered \
 ## outDir=/Users/coke6162/project20xx_cutnrun/macs2 \
 ## expName=bosTau9.main \
 ## spikeName=Ecoli \
@@ -35,7 +35,7 @@
 module load python/2.7.14/MACS/2.1.1
 
 # Define query files
-queries=($(ls ${inDir}/*.sam | xargs -n 1 basename | sed 's/_'${expName}'.sam//g' | sed 's/_'${spikeName}'.sam//g' | uniq))
+queries=($(ls ${inDir}/*_filtered.sorted.bam | xargs -n 1 basename | sed 's/_'${expName}'_filtered.sorted.bam//g' | sed 's/_'${spikeName}'_filtered.sorted.bam//g' | uniq))
 
 # Call peaks with macs2
 pwd; hostname; date
@@ -46,8 +46,8 @@ echo "macs2 version: "$(macs2 --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
 macs2 callpeak \
---treatment ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}.sorted.bam \
---name ${queries[$SLURM_ARRAY_TASK_ID]} \
+--treatment ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}_filtered.sorted.bam \
+--name ${queries[$SLURM_ARRAY_TASK_ID]}_filtered \
 --outdir ${outDir} \
 --gsize ${genomeSize} \
 --SPMR -B --keep-dup all --format BAMPE --call-summits

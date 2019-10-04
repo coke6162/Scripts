@@ -12,14 +12,14 @@
 # General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 8
+#SBATCH -n 16
 #SBATCH --time=1:00:00
-#SBATCH --mem=4GB
+#SBATCH --mem=16GB
 
 # Job name and output
 #SBATCH -J sraDownload
-#SBATCH -o /Users/%u/sbatch_script/output/slurm-%j.out
-#SBATCH -e /Users/%u/sbatch_script/error/slurm-%j.err
+#SBATCH -o /Users/%u/sbatch_script/output/slurm-%A_%a.out
+#SBATCH -e /Users/%u/sbatch_script/error/slurm-%A_%a.err
 
 # Email notifications 
 #SBATCH --mail-type=END                                         

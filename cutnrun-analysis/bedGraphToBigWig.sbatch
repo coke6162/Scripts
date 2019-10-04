@@ -7,7 +7,7 @@
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis
 ## inDir=/Users/coke6162/project20xx_cutnrun/macs2 \
 ## outDir=/Users/coke6162/project20xx_cutnrun/bigwig \
-## chromSizes=/Users/CL_Shared/db/genomes/bosTau8/fa/bosTau9.chrom.sizes
+## chromSizes=/Shares/CL_Shared/db/genomes/bosTau8/fa/bosTau9.chrom.sizes
 ## sbatch --array 0-3 bedGraphToBigWig.sbatch 
 
 # General settings
@@ -44,7 +44,7 @@ ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 echo $(date +"[%b %d %H:%M:%S] Converting sorted bedgraph to bigwig...")
 echo "bedGraphToBigWig v 4"
 
-/Users/CL_Shared/programs/ucsc/bedGraphToBigWig \
+/Shares/CL_Shared/programs/ucsc/bedGraphToBigWig \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bdg}.sorted.bdg \
 ${chromSizes} \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bdg}.bw

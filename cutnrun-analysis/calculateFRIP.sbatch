@@ -37,7 +37,7 @@ module load bedtools
 module load samtools
 
 # Define query files
-queries=($(ls ${bamDir}/*.sorted.bam | xargs -n 1 basename | sed 's/_'${expName}'.sorted.bam//g' | sed 's/_'${spikeName}'.sorted.bam//g' | uniq))
+queries=($(ls ${bamDir}/*_filtered.sorted.bam | xargs -n 1 basename | sed 's/_'${expName}'_filtered.sorted.bam//g' | sed 's/_'${spikeName}'_filtered.sorted.bam//g' | uniq))
 
 # Set a variable equal to the total number of reads
 pwd; hostname; date
@@ -49,16 +49,16 @@ echo "Processing file: "${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}
 
 echo "Setting variable equal to total number of reads..."
 
-totalReads=`samtools view -c ${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}.sorted.bam`
+totalReads=`samtools view -c ${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}_filtered.sorted.bam`
 
 echo "Total number of reads: "$(echo $totalReads)
 
 # Set a variable equal to the number of reads in peaks
 echo $(date +"[%b %d %H:%M:%S] Setting a vairable equal to the number of reads in peaks...")
 
-peakReads=`bedtools sort -i ${peakDir}/${queries[$SLURM_ARRAY_TASK_ID]}_peaks.narrowPeak \
+peakReads=`bedtools sort -i ${peakDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_peaks.narrowPeak \
 | bedtools merge -i - \
-| bedtools intersect -u -nonamecheck -a ${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}.sorted.bam -b - -ubam \
+| bedtools intersect -u -nonamecheck -a ${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}_filtered.sorted.bam -b - -ubam \
 | samtools view -c`
 
 echo "Number of reads in peaks: "$(echo $peakReads)
