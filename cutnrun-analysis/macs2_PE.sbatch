@@ -7,8 +7,6 @@
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis
 ## inDir=/Users/coke6162/project20xx_cutnrun/bowtie2/filtered \
 ## outDir=/Users/coke6162/project20xx_cutnrun/macs2 \
-## expName=bosTau9.main \
-## spikeName=Ecoli \
 ## genomeSize=2.66e9 \
 ## sbatch --array=0-3 macs2_PE.sbatch
 
@@ -46,7 +44,7 @@ echo "macs2 version: "$(macs2 --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
 macs2 callpeak \
---treatment ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}_filtered.sorted.bam \
+--treatment ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam \
 --name ${queries[$SLURM_ARRAY_TASK_ID]}_filtered \
 --outdir ${outDir} \
 --gsize ${genomeSize} \
