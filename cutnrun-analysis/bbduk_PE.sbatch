@@ -52,7 +52,7 @@ in2=${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2.fastq.gz \
 out1=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_paired.fastq.gz \
 out2=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_paired.fastq.gz \
 ref=${adapterFile} \
-ktrim=r k=34 mink=11 hdist=1 tpe tbo \
+ktrim=r k=31 mink=11 hdist=1 tpe tbo \
 qtrim=r trimq=10 \
 t=${numThreads}
 
