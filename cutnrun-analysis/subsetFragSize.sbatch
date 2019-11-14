@@ -13,7 +13,7 @@
 #SBATCH -p short
 #SBATCH -N 1
 #SBATCH -c 8
-#SBATCH --time=1:00:00
+#SBATCH --time=8:00:00
 #SBATCH --mem=32GB
 
 # Job name and output
@@ -45,9 +45,42 @@ singularity exec --bind /Shares/CL_Shared ${deeptools} \
 alignmentSieve \
 --bam ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 --maxFragmentLength 120 \
---outFile ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bam}_small.bam \
---filterMetrics ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bam}_small_metrics.txt \
---filteredOutReads ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bam}_large.bam
+--outFile ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_lessThan120.bam.tmp \
+--filterMetrics ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_lessThan120_metrics.txt \
+--filteredOutReads ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_moreThan120.bam.tmp \
 --numberOfProcessors ${numThreads} \
+
+# Sort and index output bams
+echo $(date +"[%b %d %H:%M:%S] Sorting bams (less than 120)...")
+
+samtools sort \
+-@ ${numThreads} \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_lessThan120.bam.tmp \
+-o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_lessThan120.sorted.bam
+
+rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_lessThan120.bam.tmp
+
+echo $(date +"[%b %d %H:%M:%S] Sorting bams (more than 120)...")
+
+samtools sort \
+-@ ${numThreads} \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_moreThan120.bam.tmp \
+-o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_moreThan120.sorted.bam
+
+rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_moreThan120.bam.tmp
+
+echo $(date +"[%b %d %H:%M:%S] Indexing bams (less than 120)...")
+
+samtools index \
+-@ ${numThreads} \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_lessThan120.sorted.bam \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_lessThan120.sorted.bam.bai
+
+echo $(date +"[%b %d %H:%M:%S] Indexing bams (more than 120)...")
+
+samtools index \
+-@ ${numThreads} \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_moreThan120.sorted.bam \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_moreThan120.sorted.bam.bai
 
 echo $(date +"[%b %d %H:%M:%S] Done")
