@@ -54,12 +54,12 @@ echo "Bedtools version: "$(bedtools --version)
 
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
-#bwa mem \
+bwa mem \
 -t ${numThreads} \
 ${bwaIndexDir}/${bwaIndex} \
 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_paired.fastq.gz \
 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_paired.fastq.gz \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sam
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam
 
 # Convert sam files to bam files, filtering out low quality (<10) and unmapped (through '-F 4' option)
 echo $(date +"[%b %d %H:%M:%S] Converting sam to unfiltered bam & sorting")
@@ -69,92 +69,95 @@ samtools view \
 -Sb \
 -q 10 \
 -F 4 \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sam \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam \
 | samtools sort \
 -@ ${numThreads} \
 - \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sorted.bam
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam
 
 # Generate flagstat files from unfiltered, sorted bam files
 echo $(date +"[%b %d %H:%M:%S] Making flagstat file from unfiltered bam...")
 
 samtools flagstat \
 -@ ${numThreads} \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sorted.bam \
-> ${outDir}/flagstat/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_flagstat.txt
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam \
+> ${outDir}/flagstat/${queries[$SLURM_ARRAY_TASK_ID]}_flagstat.txt
 
 # Index unfiltered sorted bam files
 echo $(date +"[%b %d %H:%M:%S] Indexing unfiltered, sorted bams...")
 
 samtools index \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sorted.bam \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sorted.bam.bai
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam \
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam.bai
 
 # Filter out chrM reads & sort
 echo $(date +"[%b %d %H:%M:%S] Removing chrM reads and sorting...")
 
 samtools view \
--b ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sorted.bam \
+-b ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam \
 ${nonChrM} \
 | samtools sort \
 -@ ${numThreads} \
 - \
-> ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_filtered.sorted.bam
+> ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam
 
 # Index filtered sorted bam files
 echo $(date +"[%b %d %H:%M:%S] Indexing filtered, sorted bams...")
 
 samtools index \
-${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_filtered.sorted.bam \
-> ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_filtered.sorted.bam.bai
+${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam \
+> ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam.bai
 
 # Generate flagstat files from unfiltered, sorted bam files
 echo $(date +"[%b %d %H:%M:%S] Making flagstat file from filtered bam...")
 
 samtools flagstat \
 -@ ${numThreads} \
-${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_filtered.sorted.bam \
-> ${outDir}/filtered/flagstat/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_filtered_flagstat.txt
+${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam \
+> ${outDir}/filtered/flagstat/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_flagstat.txt
 
 # Convert to BEDPE & filter out fragments greater than 1kb
 echo $(date +"[%b %d %H:%M:%S] Converting filtered bam to BEDPE...")
 
 samtools sort \
 -@ ${numThreads} \
--n ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_filtered.sorted.bam \
+-n ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam \
 | samtools fixmate -@ ${numThreads} - - \
 | bamToBed -bedpe -i - \
 | awk '$1==$4 && $6-$2 < 1000 {print $0}' - \
-> ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_filtered_d1000.sorted.bed
+> ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000.sorted.bed
 
 # Select the 5' and 3' coordinates of the read pair to generate a new BED3 file
 echo $(date +"[%b %d %H:%M:%S] Extract read pair coordinates to generate BED3...")
 
 cut -f 1,2,6 \
-${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_filtered_d1000.sorted.bed \
-> ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_filtered_d1000_fragments.sorted.bed
+${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000.sorted.bed \
+> ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000_fragments.sorted.bed
 
 # Convert the BED3 files into bedgraphs
 echo $(date +"[%b %d %H:%M:%S] Generating bedgraph files...")
 
-sort -k1,1 ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_filtered_d1000_fragments.sorted.bed \
+sort -k1,1 ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000_fragments.sorted.bed \
 | bedtools genomecov \
 -bg \
 -i - \
 -g ${genomeChrFile} \
-> ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_filtered_d1000_fragments.bdg
+> ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000_fragments.bdg
 
 # Determine percentage of total reads that mapped to mitochondrial genes
 echo $(date +"[%b %d %H:%M:%S] Calculating percentage of total reads mapping to mitochondrial genes")
 
-chrMreads=`samtools view -c ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sam chrM`
-totalReads=`samtools view -c ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}.sam`
+chrMreads=`samtools view -c ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam chrM`
+totalReads=`samtools view -c ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam`
 fractionMreads=`echo "100 * ${chrMreads} / ${totalReads}" | bc -l`
-touch ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_chrMreadsFraction.txt
-echo ${queries[$SLURM_ARRAY_TASK_ID]} >> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_chrMreadsFraction.txt
-echo ${totalReads} 'total mapped reads' >> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_chrMreadsFraction.txt
-echo ${chrMreads} 'mitochondrial reads' >> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_chrMreadsFraction.txt
-echo ${fractionMreads} 'percentage of mitochondrial reads from total mapped reads' >> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${name}_chrMreadsFraction.txt
+touch ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_chrMreadsFraction.txt
+echo ${queries[$SLURM_ARRAY_TASK_ID]} >> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_chrMreadsFraction.txt
+echo ${totalReads} 'total mapped reads' >> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_chrMreadsFraction.txt
+echo ${chrMreads} 'mitochondrial reads' >> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_chrMreadsFraction.txt
+echo ${fractionMreads} 'percentage of mitochondrial reads from total mapped reads' >> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_chrMreadsFraction.txt
+
+# Remove intermediate files
+rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam
 
 echo $(date +"[%b %d %H:%M:%S] Done")
 
