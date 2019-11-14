@@ -15,14 +15,14 @@
 ## General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 8
-#SBATCH --time=2:00:00
-#SBATCH --mem=32G
+#SBATCH -n 1
+#SBATCH --time=5:00:00
+#SBATCH --mem=64G
 
 # Job name and output
 #SBATCH -J bbduk_PE
-#SBATCH -o /Users/%u/sbatch_script/output/slurm-%A_%a.out
-#SBATCH -e /Users/%u/sbatch_script/error/slurm-%A_%a.err
+#SBATCH -o /Users/%u/sbatch_script/output/slurm-%j.out
+#SBATCH -e /Users/%u/sbatch_script/error/slurm-%j.err
 
 # Email notifications
 #SBATCH --mail-type=END
@@ -30,7 +30,7 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # Set constant variables
-numThreads=8
+numThreads=1
 
 # Load module
 module load bbmap
