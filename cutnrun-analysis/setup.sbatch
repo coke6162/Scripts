@@ -46,15 +46,24 @@ mkdir -p ${projectName}/fastq/fastqc/multiqc
 mkdir -p ${projectName}/bbduk
 mkdir -p ${projectName}/bbduk/fastqc
 mkdir -p ${projectName}/bbduk/fastqc/multiqc
-mkdir -p ${projectName}/bowtie2
-mkdir -p ${projectName}/bowtie2/tmp
-mkdir -p ${projectName}/bowtie2/flagstat
-mkdir -p ${projectName}/bowtie2/dedup
-mkdir -p ${projectName}/bowtie2/dedup/flagstat
+mkdir -p ${projectName}/bwa
+mkdir -p ${projectName}/bwa/filtered
+mkdir -p ${projectName}/bwa/filtered/flagstat
+mkdir -p ${projectName}/bwa/filtered/subsetFragSize
+mkdir -p ${projectName}/bwa/filtered/subsetFragSize/flagstat
 mkdir -p ${projectName}/macs2
 mkdir -p ${projectName}/seacr
 mkdir -p ${projectName}/bigwig
+mkdir -p ${projectName}/bigwig/macs2
+mkdir -p ${projectName}/repeatAnalysis
+mkdir -p ${projectName}/repeatAnalysis/macs2
+mkdir -p ${projectName}/repeatAnalysis/seacr
 mkdir -p ${projectName}/giggle
-mkdir -p ${projectName}/DESeq2
+mkdir -p ${projectName}/giggle/nonDE
+mkdir -p ${projectName}/giggle/nonDE/allRep
+mkdir -p ${projectName}/giggle/nonDE/LTR
+mkdir -p ${projectName}/giggle/nonDE/SINE
+mkdir -p ${projectName}/giggle/nonDE/LINE
+mkdir -p ${projectName}/giggle/nonDE/DNA
 
 echo $(date +"[%b %d %H:%M:%S] Done")
