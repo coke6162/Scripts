@@ -33,7 +33,7 @@
 module load python/2.7.14/MACS/2.1.1
 
 # Define query files
-queries=($(ls ${inDir}/*_filtered.sorted.bam | xargs -n 1 basename | sed 's/_'${expName}'_filtered.sorted.bam//g' | sed 's/_'${spikeName}'_filtered.sorted.bam//g' | uniq))
+queries=($(ls ${inDir}/*_filtered.sorted.bam | xargs -n 1 basename | sed 's/_filtered.sorted.bam//g'| uniq))
 
 # Call peaks with macs2
 pwd; hostname; date
