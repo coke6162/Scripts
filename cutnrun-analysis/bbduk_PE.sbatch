@@ -21,8 +21,8 @@
 
 # Job name and output
 #SBATCH -J bbduk_PE
-#SBATCH -o /Users/%u/sbatch_script/output/slurm-%j.out
-#SBATCH -e /Users/%u/sbatch_script/error/slurm-%j.err
+#SBATCH -o /Users/%u/sbatch_script/output/slurm-%A_%a.out
+#SBATCH -e /Users/%u/sbatch_script/error/slurm-%A_%a.err
 
 # Email notifications
 #SBATCH --mail-type=END
@@ -54,6 +54,7 @@ out2=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_paired.fastq.gz \
 ref=${adapterFile} \
 ktrim=r k=31 mink=11 hdist=1 tpe tbo \
 qtrim=r trimq=10 \
+stats=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_stats.txt \
 t=${numThreads}
 
 echo $(date +"[%b %d %H:%M:%S] Done")
