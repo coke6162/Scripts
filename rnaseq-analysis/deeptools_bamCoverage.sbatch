@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## Script for running deeptools bamCoverage
-## Date: 4 May 2019
+## Date: 4 November 2019
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/rnaseq-analysis

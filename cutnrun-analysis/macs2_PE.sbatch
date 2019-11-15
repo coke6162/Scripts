@@ -5,7 +5,7 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis
-## inDir=/Users/coke6162/project20xx_cutnrun/bowtie2/filtered \
+## inDir=/Users/coke6162/project20xx_cutnrun/bwa/filtered \
 ## outDir=/Users/coke6162/project20xx_cutnrun/macs2 \
 ## genomeSize=2.66e9 \
 ## sbatch --array=0-3 macs2_PE.sbatch
@@ -33,7 +33,7 @@
 module load python/2.7.14/MACS/2.1.1
 
 # Define query files
-queries=($(ls ${inDir}/*_filtered.sorted.bam | xargs -n 1 basename | sed 's/_filtered.sorted.bam//g'| uniq))
+queries=($(ls ${inDir}/*_filtered.sorted.bam | xargs -n 1 basename | sed 's/_filtered.sorted.bam//g' | uniq))
 
 # Call peaks with macs2
 pwd; hostname; date
@@ -45,7 +45,7 @@ echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
 macs2 callpeak \
 --treatment ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam \
---name ${queries[$SLURM_ARRAY_TASK_ID]}_filtered \
+--name ${queries[$SLURM_ARRAY_TASK_ID]} \
 --outdir ${outDir} \
 --gsize ${genomeSize} \
 --SPMR -B --keep-dup all --format BAMPE --call-summits

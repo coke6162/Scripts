@@ -6,7 +6,7 @@
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis
 ## inDir=/Users/coke6162/20190910_CUTnRUN_MDBK/bwa/filtered \
-## outDir=/Users/coke6162/20190910_CUTnRUN_MDBK/bwa/filtered/subsetFragSize \
+## outDir=/Users/coke6162/20190910_CUTnRUN_MDBK/bwa/filtered \
 ## sbatch --array 0-12 subsetFragSize.sbatch
 
 # General settings
@@ -27,10 +27,10 @@
 #SBATCH --mail-user=conor.j.kelly@colorado.edu
 
 # Define query files
-queries=($(ls ${inDir}/*.sorted.bam | xargs -n 1 basename | uniq))
+queries=($(ls ${inDir}/*.bam | xargs -n 1 basename | sed --expression='s/_filtered.sorted.bam//g' | uniq))
 
 # load modules
-module load singularity
+module load singularity samtools
 
 # define key variables
 deeptools=/scratch/Shares/public/singularity/deeptools-3.0.1-py35_1.img
@@ -43,11 +43,10 @@ echo $(date +"[%b %d %H:%M:%S] Starting deeptools alignmentSieve...")
 
 singularity exec --bind /Shares/CL_Shared ${deeptools} \
 alignmentSieve \
---bam ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
+--bam ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam \
 --maxFragmentLength 120 \
---outFile ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_lessThan120.bam.tmp \
---filterMetrics ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_lessThan120_metrics.txt \
---filteredOutReads ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_moreThan120.bam.tmp \
+--outFile ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan120_filtered.bam.tmp \
+--filteredOutReads ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_moreThan120_filtered.bam.tmp \
 --numberOfProcessors ${numThreads} \
 
 # Sort and index output bams
@@ -55,32 +54,54 @@ echo $(date +"[%b %d %H:%M:%S] Sorting bams (less than 120)...")
 
 samtools sort \
 -@ ${numThreads} \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_lessThan120.bam.tmp \
--o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_lessThan120.sorted.bam
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan120_filtered.bam.tmp \
+-o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan120_filtered.sorted.bam
 
-rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_lessThan120.bam.tmp
+rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan120_filtered.bam.tmp
 
 echo $(date +"[%b %d %H:%M:%S] Sorting bams (more than 120)...")
 
 samtools sort \
 -@ ${numThreads} \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_moreThan120.bam.tmp \
--o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_moreThan120.sorted.bam
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_moreThan120_filtered.bam.tmp \
+-o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_moreThan120_filtered.sorted.bam
 
-rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_moreThan120.bam.tmp
+rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_moreThan120_filtered.bam.tmp
 
 echo $(date +"[%b %d %H:%M:%S] Indexing bams (less than 120)...")
 
 samtools index \
 -@ ${numThreads} \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_lessThan120.sorted.bam \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_lessThan120.sorted.bam.bai
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan120_filtered.sorted.bam \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan120_filtered.sorted.bam.bai
 
 echo $(date +"[%b %d %H:%M:%S] Indexing bams (more than 120)...")
 
 samtools index \
 -@ ${numThreads} \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_moreThan120.sorted.bam \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}_moreThan120.sorted.bam.bai
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_moreThan120_filtered.sorted.bam \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_moreThan120_filtered.sorted.bam.bai
+
+# Generate flagstat files from bam files
+echo $(date +"[%b %d %H:%M:%S] Making flagstat file from bams (all fragments)...")
+
+samtools flagstat \
+-@ ${numThreads} \
+${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam \
+> ${outDir}/flagstat/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_flagstat.txt
+
+echo $(date +"[%b %d %H:%M:%S] Making flagstat file from bams (less than 120)...")
+
+samtools flagstat \
+-@ ${numThreads} \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan120_filtered.sorted.bam \
+> ${outDir}/flagstat/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan120_filtered_flagstat.txt
+
+echo $(date +"[%b %d %H:%M:%S] Making flagstat file from bams (more than 120)...")
+
+samtools flagstat \
+-@ ${numThreads} \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_moreThan120_filtered.sorted.bam \
+> ${outDir}/flagstat/${queries[$SLURM_ARRAY_TASK_ID]}_moreThan120_filtered_flagstat.txt
 
 echo $(date +"[%b %d %H:%M:%S] Done")

@@ -20,7 +20,7 @@
 #SBATCH -N 1
 #SBATCH -n 8
 #SBATCH --time=8:00:00
-#SBATCH --mem=32GB
+#SBATCH --mem=16GB
 
 # Job name and output
 #SBATCH -J bwa
@@ -61,6 +61,14 @@ ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_paired.fastq.gz \
 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_paired.fastq.gz \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam
 
+# Generate flagstat files from unfiltered sam files
+echo $(date +"[%b %d %H:%M:%S] Making flagstat file from unfiltered sam...")
+
+samtools flagstat \
+-@ ${numThreads} \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam \
+> ${outDir}/flagstat/${queries[$SLURM_ARRAY_TASK_ID]}_flagstat.txt
+
 # Convert sam files to bam files, filtering out low quality (<10) and unmapped (through '-F 4' option)
 echo $(date +"[%b %d %H:%M:%S] Converting sam to unfiltered bam & sorting")
 
@@ -74,14 +82,6 @@ ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam \
 -@ ${numThreads} \
 - \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam
-
-# Generate flagstat files from unfiltered, sorted bam files
-echo $(date +"[%b %d %H:%M:%S] Making flagstat file from unfiltered bam...")
-
-samtools flagstat \
--@ ${numThreads} \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam \
-> ${outDir}/flagstat/${queries[$SLURM_ARRAY_TASK_ID]}_flagstat.txt
 
 # Index unfiltered sorted bam files
 echo $(date +"[%b %d %H:%M:%S] Indexing unfiltered, sorted bams...")
@@ -125,14 +125,14 @@ samtools sort \
 | samtools fixmate -@ ${numThreads} - - \
 | bamToBed -bedpe -i - \
 | awk '$1==$4 && $6-$2 < 1000 {print $0}' - \
-> ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000.sorted.bed
+> ${outDir}/filtered/seacrInput/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000.sorted.bed
 
 # Select the 5' and 3' coordinates of the read pair to generate a new BED3 file
 echo $(date +"[%b %d %H:%M:%S] Extract read pair coordinates to generate BED3...")
 
 cut -f 1,2,6 \
 ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000.sorted.bed \
-> ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000_fragments.sorted.bed
+> ${outDir}/filtered/seacrInput/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000_fragments.sorted.bed
 
 # Convert the BED3 files into bedgraphs
 echo $(date +"[%b %d %H:%M:%S] Generating bedgraph files...")
@@ -142,13 +142,13 @@ sort -k1,1 ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000_fr
 -bg \
 -i - \
 -g ${genomeChrFile} \
-> ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000_fragments.bdg
+> ${outDir}/filtered/seacrInput/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000_fragments.bdg
 
 # Determine percentage of total reads that mapped to mitochondrial genes
 echo $(date +"[%b %d %H:%M:%S] Calculating percentage of total reads mapping to mitochondrial genes")
 
-chrMreads=`samtools view -c ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam chrM`
-totalReads=`samtools view -c ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam`
+chrMreads=`samtools view -c ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam chrM`
+totalReads=`samtools view -c ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam`
 fractionMreads=`echo "100 * ${chrMreads} / ${totalReads}" | bc -l`
 touch ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_chrMreadsFraction.txt
 echo ${queries[$SLURM_ARRAY_TASK_ID]} >> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_chrMreadsFraction.txt

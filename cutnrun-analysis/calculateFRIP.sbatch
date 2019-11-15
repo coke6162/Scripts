@@ -5,11 +5,9 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis
-## bamDir=/Users/coke6162/project20xx_cutnrun/bowtie2 \
+## bamDir=/Users/coke6162/project20xx_cutnrun/bwa/filtered \
 ## peakDir=/Users/coke6162/project20xx_cutnrun/macs2 \
 ## outDir=/Users/coke6162/project20xx_cutnrun/macs2/FRIP \
-## expName=bosTau9.main \
-## spikeName=Ecoli \
 ## sbatch --array=0-4 calculateFRIP.sbatch
 
 ## General settings
@@ -37,7 +35,7 @@ module load bedtools
 module load samtools
 
 # Define query files
-queries=($(ls ${bamDir}/*_filtered.sorted.bam | xargs -n 1 basename | sed 's/_'${expName}'_filtered.sorted.bam//g' | sed 's/_'${spikeName}'_filtered.sorted.bam//g' | uniq))
+queries=($(ls ${bamDir}/*_filtered.sorted.bam | xargs -n 1 basename | sed 's/_filtered.sorted.bam//g' | uniq))
 
 # Set a variable equal to the total number of reads
 pwd; hostname; date
@@ -45,20 +43,20 @@ pwd; hostname; date
 echo "Bedtools version: "$(bedtools --version)
 echo "Samtools version: "$(samtools --version)
 
-echo "Processing file: "${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}
+echo "Processing file: "${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam
 
 echo "Setting variable equal to total number of reads..."
 
-totalReads=`samtools view -c ${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}_filtered.sorted.bam`
+totalReads=`samtools view -c ${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam`
 
 echo "Total number of reads: "$(echo $totalReads)
 
 # Set a variable equal to the number of reads in peaks
 echo $(date +"[%b %d %H:%M:%S] Setting a vairable equal to the number of reads in peaks...")
 
-peakReads=`bedtools sort -i ${peakDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_peaks.narrowPeak \
+peakReads=`bedtools sort -i ${peakDir}/${queries[$SLURM_ARRAY_TASK_ID]}_peaks.narrowPeak \
 | bedtools merge -i - \
-| bedtools intersect -u -nonamecheck -a ${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}_filtered.sorted.bam -b - -ubam \
+| bedtools intersect -u -nonamecheck -a ${bamDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam -b - -ubam \
 | samtools view -c`
 
 echo "Number of reads in peaks: "$(echo $peakReads)

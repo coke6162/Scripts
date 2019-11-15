@@ -49,9 +49,8 @@ mkdir -p ${projectName}/bbduk/fastqc/multiqc
 mkdir -p ${projectName}/bwa
 mkdir -p ${projectName}/bwa/filtered
 mkdir -p ${projectName}/bwa/filtered/flagstat
-mkdir -p ${projectName}/bwa/filtered/subsetFragSize
-mkdir -p ${projectName}/bwa/filtered/subsetFragSize/flagstat
 mkdir -p ${projectName}/macs2
+mkdir -p ${projectName}/macs2/FRIP
 mkdir -p ${projectName}/seacr
 mkdir -p ${projectName}/bigwig
 mkdir -p ${projectName}/bigwig/macs2
