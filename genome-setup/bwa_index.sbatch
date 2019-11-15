@@ -5,8 +5,8 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/genome-setup
-## inDir=/Users/CL_Shared/db/genomes/bosTau9/fa \
-## outDir=/Users/CL_Shared/db/genomes/bosTau9/index/bwa \
+## inDir=/Shares/CL_Shared/db/genomes/bosTau9/fa \
+## outDir=/Shares/CL_Shared/db/genomes/bosTau9/index/bwa \
 ## scriptDir=/Users/coke6162/repos/scripts/genome-setup \
 ## prefix=bosTau9.main \
 ## fastaFile=bosTau9.main.fa \
@@ -15,9 +15,9 @@
 ## General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 1
-#SBATCH --time=8:00:00
-#SBATCH --mem=64GB
+#SBATCH -n 8
+#SBATCH --time=4:00:00
+#SBATCH --mem=32GB
 
 # Job name and output
 #SBATCH -J bwa
