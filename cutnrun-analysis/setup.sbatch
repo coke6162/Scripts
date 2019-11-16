@@ -57,6 +57,9 @@ mkdir -p ${projectName}/bigwig/macs2
 mkdir -p ${projectName}/repeatAnalysis
 mkdir -p ${projectName}/repeatAnalysis/macs2
 mkdir -p ${projectName}/repeatAnalysis/seacr
+mkdir -p ${projectName}/deeptools
+mkdir -p ${projectName}/deeptools/macs2
+mkdir -p ${projectName}/deeptools/seacr
 mkdir -p ${projectName}/giggle
 mkdir -p ${projectName}/giggle/nonDE
 mkdir -p ${projectName}/giggle/nonDE/allRep
