@@ -38,7 +38,7 @@ echo "Bedtools version: "$(bedtools --version)
 
 echo "Processing file: "${inDir}/${inFile}
 
-bash /Shares/CL_Shared/programs/SEACR/SEACR_1.1.sh \
+bash /Shares/CL_Shared/programs/SEACR_1.2/SEACR_1.2.sh \
 ${inDir}/${inFile} \
 ${inDir}/${controlFile} \
 norm \
