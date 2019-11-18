@@ -5,10 +5,8 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis
-## inDir=/Users/coke6162/project20xx_cutnrun/bowtie2 \
-## outDir=/Users/coke6162/project20xx_cutnrun/bowtie2 \
-## expName=bosTau9.main \
-## spikeName=Ecoli \
+## inDir=/Users/coke6162/project20xx_cutnrun/bwa/filtered \
+## outDir=/Users/coke6162/project20xx_cutnrun/bwa/filtered/unNormBdg \
 ## genomeChrFile=/Users/CL_Shared/db/genomes/bosTau9/fa/bosTau9.main.chrom.sizes \
 ## sbatch --array=0-4 bamToBedGraph.sbatch
 
@@ -37,7 +35,7 @@ module load samtools
 module load bedtools
 
 # Define query files
-queries=($(ls ${inDir}/*_filtered.sorted.bam | xargs -n 1 basename | sed 's/_'${expName}'_filtered.sorted.bam//g' | sed 's/_'${spikeName}'_filtered.sorted.bam//g' | uniq))
+queries=($(ls ${inDir}/*_filtered.sorted.bam | xargs -n 1 basename | sed 's/_filtered.sorted.bam//g' | uniq))
 
 # Generate un-normalized bedgraphs
 pwd; hostname; date
@@ -50,10 +48,10 @@ echo "Processing file: "${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorte
 
 samtools sort \
 -@ ${numThreads} \
-${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}_filtered.sorted.bam \
+${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam \
 | bedtools genomecov \
 -bg \
 -ibam - \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_${expName}_filtered_unNorm.bdg
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_unNorm.bdg
 
 echo $(date +"[%b %d %H:%M:%S] Done")
