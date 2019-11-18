@@ -7,7 +7,7 @@
 ## inDir=/Users/coke6162/project20xx_cutnrun/macs2 \
 ## outDir=/Users/coke6162/project20xx_cutnrun/giggle/non-DE/allRep \
 ## repeatIndexDir=/Shares/CL_Shared/db/giggle/bosTau8/repeats/indexed \
-## repeatPath=/Shares/CL_Shared/db/giggle/bosTau8/repeats/sorted/ \
+## repeatPath=/Users/CL_Shared/db/giggle/bosTau8/repeats/sorted/ \
 ## genomeSize=2660906405 \
 ## suffix=narrowPeak \
 ## sbatch --array 0-3 giggleSearch.sbatch
@@ -45,7 +45,7 @@ echo "Processing peak file: "${queries[$SLURM_ARRAY_TASK_ID]}
 # add '.bed' suffix
 echo $(date +"[%b %d %H:%M:%S] Adding '.bed' suffix...")
 
-mv ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bed
+cp ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bed
 
 # bgzip each bed file
 echo $(date +"[%b %d %H:%M:%S] Starting bgzip...")
@@ -81,14 +81,9 @@ echo $(date +"[%b %d %H:%M:%S] Removing intermediate file...")
 
 rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.giggleStats.tmp
 
-# decompress bgzip'd bed files
-echo $(date +"[%b %d %H:%M:%S] Decompressing bgzip'd narrowPeak bed files...")
+# remove '.bed.gz' files
+echo $(date +"[%b %d %H:%M:%S] Removing '.bed.gz' files...")
 
-bgzip -d ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bed.gz
-
-# remove '.bed' suffix
-echo $(date +"[%b %d %H:%M:%S] Adding '.bed' suffix...")
-
-mv ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bed ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}
+rm ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bed.gz
 
 echo $(date +"[%b %d %H:%M:%S] Done")
