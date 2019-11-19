@@ -19,7 +19,7 @@
 #SBATCH --mem=8G
 
 # Job name and output
-#SBATCH -J runGetSummits_seacr.sbatch
+#SBATCH -J bedtools_slop
 #SBATCH -o /Users/%u/sbatch_script/output/slurm-%A_%a.out
 #SBATCH -e /Users/%u/sbatch_script/error/slurm-%A_%a.err
 
@@ -34,9 +34,14 @@ queries=($(ls ${inDir}/*_summits.bed | xargs -n 1 basename | sed --expression='s
 # load modules
 module load bedtools
 
-# run the thing
+# make output directory
 pwd; hostname; date
 
+echo "Making output directory..."
+
+mkdir -p ${outDir}/b${slopValue}
+
+# run the thing
 echo "Starting bedtools slop..."
 echo "Bedtools version: "$(bedtools --version)
 
@@ -46,6 +51,6 @@ bedtools slop \
 -i ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_summits.bed \
 -g ${genomeChrFile} \
 -b ${slopValue} \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_slopSummits_b${slopValue}.bed
+> ${outDir}/b${slopValue}/${queries[$SLURM_ARRAY_TASK_ID]}_slopSummits_b${slopValue}.bed
 
 echo $(date +"[%b %d %H:%M:%S] Done")

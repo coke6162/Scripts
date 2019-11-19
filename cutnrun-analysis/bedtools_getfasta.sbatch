@@ -5,8 +5,8 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis
-## inDir=/Users/coke6162/20191111_CUTnRUN_MDCK/seacr/stringent/slopSummits \
-## outDir=/Users/coke6162/20191111_CUTnRUN_MDCK/seacr/stringent/slopSummits/fasta \
+## inDir=/Users/coke6162/20191111_CUTnRUN_MDCK/seacr/stringent/slopSummits/b75 \
+## outDir=/Users/coke6162/20191111_CUTnRUN_MDCK/seacr/stringent/slopSummits/b75/fa \
 ## genomeFaFile=/Shares/CL_Shared/db/genomes/canFam3/fa/canFam3.main.fa \
 ## sbatch --array=0-38 bedtools_getfasta.sbatch
 
@@ -33,9 +33,14 @@ queries=($(ls ${inDir}/*.bed | xargs -n 1 basename | sed --expression='s/.bed//g
 # load modules
 module load bedtools
 
-# run the thing
+# make output directory
 pwd; hostname; date
 
+echo "Making output directory..."
+
+mkdir -p ${outDir}
+
+# run the thing
 echo "Starting bedtools getfasta..."
 echo "Bedtools version: "$(bedtools --version)
 
