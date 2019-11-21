@@ -38,13 +38,18 @@ module load bedtools
 fastaFile=/Users/CL_Shared/db/genomes/${genomeName}/fa/${genomeName}.main.fa
 chromSizes=/Users/CL_Shared/db/genomes/${genomeName}/fa/${genomeName}.main.chrom.sizes
 
-# Run fimo
+# Make output directories
 pwd; hostname; date
 
 echo "fimo version: "$(fimo --version)
 echo "bedtools version: "$(bedtools --version)
 
-echo $(date +"[%b %d %H:%M:%S] Starting fimo...")
+echo "Making output directories..."
+
+mkdir -p ${outDir}/pval_${pvalue}
+
+# Run fimo
+echo $(date +"[%b %d %H:%M:%S] Running fimo...")
 
 fimo \
 --text \
@@ -54,7 +59,7 @@ ${motifFile} \
 ${fastaFile} \
 > ${outDir}/pval_${pvalue}/${name}_${pvalue}.txt
 
-# Convert output to bed & output to a new directory
+# Convert output to bed & add pval as a file suffix
 echo $(date +"[%b %d %H:%M:%S] Convert fimo output to bed format...")
 
 mkdir -p ${outDir}/pval_${pvalue}
