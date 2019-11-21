@@ -9,7 +9,7 @@
 ## pvalue=1e-4 \
 ## motifFile=/Users/coke6162/repos/project_files/20190613_ATAC-seq_BL3.1/MA0137.3.meme \
 ## name=MA0137.3 \
-## outDir=/Users/CL_Shared/db/genomes/bosTau9/fimo/MA0137.3 \
+## outDir=/Shares/CL_Shared/db/genomes/bosTau9/fimo/MA0137.3 \
 ## sbatch fimo.sbatch
 
 # General settings
@@ -35,8 +35,8 @@ module load python/2.7.14/numpy/1.14.1
 module load bedtools
 
 # Define key variables
-fastaFile=/Users/CL_Shared/db/genomes/${genomeName}/fa/${genomeName}.main.fa
-chromSizes=/Users/CL_Shared/db/genomes/${genomeName}/fa/${genomeName}.main.chrom.sizes
+fastaFile=/Shares/CL_Shared/db/genomes/${genomeName}/fa/${genomeName}.main.fa
+chromSizes=/Shares/CL_Shared/db/genomes/${genomeName}/fa/${genomeName}.main.chrom.sizes
 
 # Make output directories
 pwd; hostname; date
@@ -64,7 +64,7 @@ echo $(date +"[%b %d %H:%M:%S] Convert fimo output to bed format...")
 
 mkdir -p ${outDir}/pval_${pvalue}
 
-/opt/python/2.7.14/bin/python2.7 /Users/CL_Shared/scripts/ed/fimo_analysis.py \
+/opt/python/2.7.14/bin/python2.7 /Shares/CL_Shared/scripts/ed/fimo_analysis.py \
 -i ${outDir}/pval_${pvalue}/${name}_${pvalue}.txt \
 -o ${outDir}/pval_${pvalue}
 
@@ -84,7 +84,7 @@ bedtools sort \
 # Create a bigwig from the bedgraph output
 echo $(date +"[%b %d %H:%M:%S] Create a bigwig from bedgraph output...")
 
-/Users/CL_Shared/programs/ucsc/bedGraphToBigWig \
+/Shares/CL_Shared/programs/ucsc/bedGraphToBigWig \
 ${outDir}/pval_${pvalue}/${name}_${pvalue}.bdg \
 ${chromSizes} \
 ${outDir}/pval_${pvalue}/${name}_${pvalue}.bw
