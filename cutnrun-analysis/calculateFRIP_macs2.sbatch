@@ -8,14 +8,14 @@
 ## bamDir=/Users/coke6162/project20xx_cutnrun/bwa/filtered \
 ## peakDir=/Users/coke6162/project20xx_cutnrun/macs2 \
 ## outDir=/Users/coke6162/project20xx_cutnrun/macs2/FRIP \
-## sbatch --array=0-4 calculateFRIP.sbatch
+## sbatch --array=0-4 calculateFRIP_macs2.sbatch
 
 ## General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 8
-#SBATCH --time=24:00:00
-#SBATCH --mem=16G
+#SBATCH -n 1
+#SBATCH --time=2:00:00
+#SBATCH --mem=32G
 
 # Job name and output
 #SBATCH -J FRIP
@@ -26,9 +26,6 @@
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=coke6162@colorado.edu
-
-# Set constant variables
-numThreads=8
 
 # Load modules
 module load bedtools
