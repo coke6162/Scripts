@@ -116,34 +116,6 @@ samtools flagstat \
 ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam \
 > ${outDir}/filtered/flagstat/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_flagstat.txt
 
-# Convert to BEDPE & filter out fragments greater than 1kb
-echo $(date +"[%b %d %H:%M:%S] Converting filtered bam to BEDPE...")
-
-samtools sort \
--@ ${numThreads} \
--n ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam \
-| samtools fixmate -@ ${numThreads} - - \
-| bamToBed -bedpe -i - \
-| awk '$1==$4 && $6-$2 < 1000 {print $0}' - \
-> ${outDir}/filtered/seacrInput/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000.sorted.bed
-
-# Select the 5' and 3' coordinates of the read pair to generate a new BED3 file
-echo $(date +"[%b %d %H:%M:%S] Extract read pair coordinates to generate BED3...")
-
-cut -f 1,2,6 \
-${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000.sorted.bed \
-> ${outDir}/filtered/seacrInput/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000_fragments.sorted.bed
-
-# Convert the BED3 files into bedgraphs
-echo $(date +"[%b %d %H:%M:%S] Generating bedgraph files...")
-
-sort -k1,1 ${outDir}/filtered/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000_fragments.sorted.bed \
-| bedtools genomecov \
--bg \
--i - \
--g ${genomeChrFile} \
-> ${outDir}/filtered/seacrInput/${queries[$SLURM_ARRAY_TASK_ID]}_filtered_d1000_fragments.bdg
-
 # Determine percentage of total reads that mapped to mitochondrial genes
 echo $(date +"[%b %d %H:%M:%S] Calculating percentage of total reads mapping to mitochondrial genes")
 
