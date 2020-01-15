@@ -9,7 +9,6 @@
 ## outDir=/Shares/CL_Shared/db/genomes/bosTau9/index/bwa \
 ## scriptDir=/Users/coke6162/repos/scripts/genome-setup \
 ## prefix=bosTau9.main \
-## fastaFile=bosTau9.main.fa \
 ## sbatch bwa_index.sbatch
 
 ## General settings
@@ -43,12 +42,14 @@ echo "bwa version: "$(bwa --version)
 
 bwa index \
 -p ${prefix} \
-${inDir}/${fastaFile} \
+${inDir}/${prefix}.fa \
 
 # Move output
 pwd; hostname; date
 
 echo "Moving output files..."
+
+mkdir -p ${outDir}
 
 mv ${scriptDir}/${prefix}* ${outDir}/
 
