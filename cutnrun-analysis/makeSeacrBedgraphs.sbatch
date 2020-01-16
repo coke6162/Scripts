@@ -18,7 +18,7 @@
 #SBATCH --mem=16GB
 
 # Job name and output
-#SBATCH -J subsetFragSize
+#SBATCH -J makeSeacrBedgraphs
 #SBATCH -o /Users/%u/sbatch_script/output/slurm-%A_%a.out
 #SBATCH -e /Users/%u/sbatch_script/error/slurm-%A_%a.err
 
