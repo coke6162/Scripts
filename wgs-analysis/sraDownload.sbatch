@@ -31,7 +31,6 @@ module load sra
 
 # Define path variables
 inDir=${projectDir}/fastq
-outDir=${projectDir}/fastq/fastqc
 
 # Define query files
 queries=($(cat ${refDir}/sraDownload.txt | awk '(NR>1){print $1}'))
