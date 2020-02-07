@@ -7,7 +7,7 @@
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis
 ## inDir=/Users/coke6162/project20xx_cutnrun/macs2 \
 ## outDir=/Users/coke6162/project20xx_cutnrun/bigwig \
-## chromSizes=/Shares/CL_Shared/db/genomes/bosTau8/fa/bosTau9.chrom.sizes
+## chromSizes=/Shares/CL_Shared/db/genomes/bosTau8/fa/bosTau9.chrom.sizes \
 ## sbatch --array 0-3 bedGraphToBigWig.sbatch 
 
 # General settings

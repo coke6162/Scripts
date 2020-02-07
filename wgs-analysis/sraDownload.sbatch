@@ -5,8 +5,7 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/wgs-analysis
-## projectDir=/Users/coke6162/yyyymmdd_wgs_projectName \
-## refDir=/Users/coke6162/repos/project_files/yyyymmdd_wgs_projectName \
+## projectName=yyyymmdd_wgs_projectName \
 ## sbatch --array 0-35 sraDownload.sbatch
 
 # General settings
@@ -30,9 +29,13 @@
 module load sra
 
 # Define path variables
-inDir=${projectDir}/fastq
+inDir=$HOME/${projectName}/fastq
+refDir=$HOME/repos/project_files/${projectName}
 
 # Define query files
+# This works with a txt file where the first column (starting with row #2) contains SRR IDs
+# If your SRR IDs are in a column other than the first, modify the 'print $1' argument
+# If you do not have a header, remove the 'NR>1' argument
 queries=($(cat ${refDir}/sraDownload.txt | awk '(NR>1){print $1}'))
 
 # Run fastq-dump

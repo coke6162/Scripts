@@ -5,7 +5,7 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/wgs-analysis
-## projectDir=/Users/coke6162/yyyymmdd_wgs_projectName \
+## projectName=yyyymmdd_wgs_projectName \
 ## sbatch multiqc.sbatch
 
 # General settings
@@ -13,7 +13,7 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --time=2:00:00
-#SBATCH --mem=32GB
+#SBATCH --mem=8GB
 
 # Job name and output
 #SBATCH -J multiqc
@@ -32,8 +32,8 @@ module load singularity
 multiqc=/scratch/Shares/public/singularity/multiqc-1.7.img
 
 # Define path variables
-inDir=${projectDir}/fastq/fastqc
-outDir=${projectDir}/fastq/fastqc/multiqc
+inDir=$HOME/${projectName}/fastq/fastqc
+outDir=$HOME/${projectName}/fastq/fastqc/multiqc
 
 # Run MultiQC
 pwd; hostname; date
