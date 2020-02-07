@@ -7,6 +7,7 @@
 ## cd /Users/coke6162/repos/scripts/wgs-analysis
 ## parentDir=/scratch/Users/coke6162 \
 ## projectName=yyyymmdd_wgs_projectName \
+## bwaIndex=/Shares/CL_Shared/db/genomes/bosTau9/1000_Bull_Genomes_Project/index/bwa/ARS-UCD1.2_Btau5.0.1Y.main \
 ## sbatch --array 0-35 bwa_PE.sbatch
 
 ## General settings
