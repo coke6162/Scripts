@@ -5,6 +5,7 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/wgs-analysis
+## parentDir=/scratch/Users/coke6162 \
 ## projectName=yyyymmdd_wgs_projectName \
 ## sbatch --array 0-35 picard_SortSam.sbatch
 
@@ -29,9 +30,9 @@
 numThreads=8
 
 # Define path variables
-inDir=$HOME/${projectName}/bwa/picard/sorted
-outDir=$HOME/${projectName}/bwa/picard/merged
-tmpDir=$HOME/${projectName}/java_tmp
+inDir=${parentDir}/${projectName}/bwa/picard/sorted
+outDir=${parentDir}/${projectName}/bwa/picard/merged
+tmpDir=${parentDir}/${projectName}/java_tmp
 
 # Define query files
 queries=($(ls ${inDir}/*.sorted.bam | xargs -n 1 basename))

@@ -4,7 +4,8 @@
 ## Date: 6 February 2020 
 
 ## Example usage:
-## cd /Users/coke6162/repos/project_files/20200102_DNA-seq_bosTau9_USMARC
+## cd /Users/coke6162/repos/scripts/wgs-analysis
+## parentDir=/scratch/Users/coke6162 \
 ## projectName=yyyymmdd_wgs_projectName \
 ## sbatch --array 0-35 bwa_PE.sbatch
 
@@ -12,7 +13,7 @@
 #SBATCH -p long
 #SBATCH -N 1
 #SBATCH -n 8
-#SBATCH --time=48:00:00
+#SBATCH --time=72:00:00
 #SBATCH --mem=16GB
 
 # Job name and output
@@ -33,8 +34,8 @@ module load samtools
 numThreads=8
 
 # Define path variables
-inDir=$HOME/${projectName}/fastq
-outDir=$HOME/${projectName}/bwa
+inDir=${parentDir}/${projectName}/fastq
+outDir=${parentDir}/${projectName}/bwa
 
 # Define query files
 # This will include all identifying information except for the file suffix

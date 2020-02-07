@@ -5,6 +5,7 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/wgs-analysis
+## parentDir=/scratch/Users/coke6162 \
 ## projectName=yyyymmdd_wgs_projectName \
 ## sample=Limousin2 \
 ## sbatch picard_MergeSamFiles.sbatch
@@ -30,9 +31,9 @@
 numThreads=16
 
 # Define path variables
-inDir=$HOME/${projectName}/bwa/picard/sorted
-outDir=$HOME/${projectName}/bwa/picard/merged
-tmpDir=$HOME/${projectName}/java_tmp
+inDir=${parentDir}/${projectName}/bwa/picard/sorted
+outDir=${parentDir}/${projectName}/bwa/picard/merged
+tmpDir=${parentDir}/${projectName}/java_tmp
 
 # Make temporary directory
 pwd; hostname; date

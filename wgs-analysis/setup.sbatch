@@ -5,7 +5,7 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/wgs-analysis
-## inDir=/Users/coke6162 \
+## parentDir=/Users/coke6162 \
 ## projectName=yyyymmdd_wgs_projectName \
 ## sbatch setup.sbatch
 
@@ -29,12 +29,12 @@
 # Set up directory structure
 pwd; hostname; date
 
-echo "Working dir: "${inDir}
+echo "Working dir: "${parentDir}
 echo "Project: "${projectName}
 echo $(date +"[%b %d %H:%M:%S] Making project directories...")
 
 # Go to the designated work dir
-cd ${inDir}
+cd ${parentDir}
 
 # Make a new project dir
 mkdir -p ${projectName}

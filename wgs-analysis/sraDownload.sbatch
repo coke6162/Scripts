@@ -5,6 +5,7 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/wgs-analysis
+## parentDir=/scratch/Users/coke6162 \
 ## projectName=yyyymmdd_wgs_projectName \
 ## sbatch --array 0-35 sraDownload.sbatch
 
@@ -29,8 +30,8 @@
 module load sra
 
 # Define path variables
-inDir=$HOME/${projectName}/fastq
-refDir=$HOME/repos/project_files/${projectName}
+inDir=${parentDir}/${projectName}/fastq
+refDir=${parentDir}/repos/project_files/${projectName}
 
 # Define query files
 # This works with a txt file where the first column (starting with row #2) contains SRR IDs

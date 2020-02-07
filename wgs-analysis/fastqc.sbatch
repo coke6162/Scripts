@@ -5,6 +5,7 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/wgs-analysis
+## parentDir=/scratch/Users/coke6162 \
 ## projectName=yyyymmdd_wgs_projectName \
 ## sbatch --array 0-35 fastqc.sbatch
 
@@ -32,8 +33,8 @@ module load fastqc
 numThreads=4
 
 # Define path variables
-inDir=$HOME/${projectName}/fastq
-outDir=$HOME/${projectName}/fastq/fastqc
+inDir=${parentDir}/${projectName}/fastq
+outDir=${parentDir}/${projectName}/fastq/fastqc
 
 # Define query files
 queries=($(ls ${inDir}/*.fastq.gz | xargs -n 1 basename))
