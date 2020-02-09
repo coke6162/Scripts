@@ -11,10 +11,10 @@
 ## sbatch --array 0-35 bwa_PE.sbatch
 
 ## General settings
-#SBATCH -p long
+#SBATCH -p short
 #SBATCH -N 1
 #SBATCH -n 8
-#SBATCH --time=72:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mem=16GB
 
 # Job name and output
