@@ -13,7 +13,7 @@
 #SBATCH -p short
 #SBATCH -N 1
 #SBATCH -n 8
-#SBATCH --time=24:00:00
+#SBATCH --time=12:00:00
 #SBATCH --mem=8GB
 
 # Job name and output
@@ -30,8 +30,8 @@
 numThreads=8
 
 # Define path variables
-inDir=${parentDir}/${projectName}/bwa/picard/sorted
-outDir=${parentDir}/${projectName}/bwa/picard/merged
+inDir=${parentDir}/${projectName}/bwa
+outDir=${parentDir}/${projectName}/bwa/picard/sorted
 tmpDir=${parentDir}/${projectName}/java_tmp
 
 # Define query files
