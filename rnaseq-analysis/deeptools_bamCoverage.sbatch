@@ -59,7 +59,7 @@ bamCoverage \
 -p ${numCPU} \
 --normalizeUsing CPM \
 --filterRNAstrand forward \
---ignoreForNormalization chrX chrM \
+--ignoreForNormalization chrX chrM
 
 # Start by generating bigwig from reverse strand data
 echo $(date +"[%b %d %H:%M:%S] Generate reverse strand bigwigs...")
