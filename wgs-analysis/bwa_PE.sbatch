@@ -48,7 +48,7 @@ queries=($(ls ${inDir}/*.fastq.gz | xargs -n 1 basename | sed 's/_1.fastq.gz//g'
 # For example, this will work with 'Limousin2_run1_lane1'
 sample=$(echo ${queries[$SLURM_ARRAY_TASK_ID]} | cut -d _ -f 1)
 
-# Run bwa
+# Make temporary directory
 pwd; hostname; date
 
 echo "bwa version: "$(bwa)
@@ -56,7 +56,10 @@ echo "Samtools version: "$(samtools --version)
 
 echo "Processing sample: "${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}
 
-echo "Aligning reads to the genome & outputting sam files"
+mkdir -p ${outDir}/samtools_tmp/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}
+
+# Run bwa
+echo $(date +"[%b %d %H:%M:%S] Aligning reads to the genome & outputting sam files")
 
 bwa mem \
 -M \
@@ -83,6 +86,7 @@ samtools view \
 -Sb \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam \
 | samtools sort \
+-T ${outDir}/samtools_tmp/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID} \
 -@ ${numThreads} \
 - \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam
