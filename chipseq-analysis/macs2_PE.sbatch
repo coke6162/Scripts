@@ -39,7 +39,15 @@ echo "Control file: "${controlFile}
 echo "Genome size: "${genomeSize}
 echo $(date +"[%b %d %H:%M:%S] Starting MACS2 peak calling...")
 
-macs2 callpeak -t ${inDir}/${treatFile} -c ${inDir}/${controlFile} -n ${name} -B --SPMR -g ${genomeSize} -f BAMPE --outdir ${outDir}
+macs2 callpeak \
+-t ${inDir}/${treatFile} \
+-c ${inDir}/${controlFile} \
+-n ${name} \
+-B \
+--SPMR \
+-g ${genomeSize} \
+-f BAMPE \
+--outdir ${outDir}
 
 echo $(date +"[%b %d %H:%M:%S] Done")
 
