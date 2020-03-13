@@ -16,7 +16,7 @@
 #SBATCH -N 1
 #SBATCH -c 8
 #SBATCH --time=1-00:00
-#SBATCH --mem=32GB
+#SBATCH --mem=8GB
 
 # Job name and output
 #SBATCH -J computeBamCountMatrix
