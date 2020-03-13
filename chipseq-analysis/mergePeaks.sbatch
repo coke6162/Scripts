@@ -38,7 +38,7 @@ pwd; hostname; date
 echo "Merging narrowPeak regions from all samples"
 echo "bedtools version: "$(bedtools --version)
 
-cat ${inDir}/*${pulldown}*${treatment}*${fileType} > ${outDir}/all_${pulldown}_${treatment}_${fileType}.tmp
+cat ${inDir}/*${treatment}*${pulldown}*${fileType} > ${outDir}/all_${pulldown}_${treatment}_${fileType}.tmp
 
 echo $(date +"[%b %d %H:%M:%S]")
 
