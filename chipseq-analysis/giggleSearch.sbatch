@@ -6,8 +6,8 @@
 ## Example usage:
 ## inDir=/Users/coke6162/project20xx_chipseq/macs2 \
 ## outDir=/Users/coke6162/project20xx_chipseq/giggle/allRep \
-## repeatIndexDir=/Users/CL_Shared/db/giggle/mm10/repeats/indexed \
-## repeatPath=/Users/CL_Shared/db/giggle/mm10/repeats/sorted/ \
+## repeatIndexDir=/Shares/CL_Shared/db/giggle/mm10/repeats/indexed \
+## repeatPath=/Shares/CL_Shared/db/giggle/mm10/repeats/sorted/ \
 ## genomeSize=2730871774 \
 ## suffix=narrowPeak.filtered \
 ## sbatch --array 0-3 giggleSearch.sbatch
