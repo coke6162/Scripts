@@ -32,6 +32,7 @@ numThreads=8
 
 # Load modules
 module load samtools
+module load sambamba
 
 # Define query files
 queries=($(ls ${inDir}/*.sorted.bam | xargs -n 1 basename))
@@ -68,6 +69,7 @@ sambamba markdup \
 --remove-duplicates \
 --nthreads=${numThreads} \
 --overflow-list-size=600000 \
+--hash-table-size=4194304 \
 --tmpdir=${inDir}/tmp \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.bam \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.dedup.bam
