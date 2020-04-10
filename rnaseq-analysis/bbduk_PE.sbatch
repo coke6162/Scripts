@@ -15,9 +15,9 @@
 ## General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 16
-#SBATCH --time=1:00:00
-#SBATCH --mem=20G
+#SBATCH -n 1
+#SBATCH --time=6:00:00
+#SBATCH --mem=32G
 
 # Job name and output
 #SBATCH -J bbduk_PE
@@ -30,7 +30,7 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # Set constant variables
-numThreads=16
+numThreads=1
 
 # Load module
 module load bbmap
@@ -48,7 +48,7 @@ echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 echo $(date +"[%b %d %H:%M:%S] Running bbduk...")
 
 bbduk.sh \
--Xmx20g \
+-Xmx32g \
 t=${numThreads} \
 in1=${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1.fastq.gz \
 in2=${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2.fastq.gz \
