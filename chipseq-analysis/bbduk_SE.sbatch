@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## Script for running bbduk
-## Date: 10 July 2019
+## Date: 15 April 2020
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/chipseq-analysis
@@ -13,9 +13,9 @@
 ## General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 8
+#SBATCH -n 1
 #SBATCH --time=2:00:00
-#SBATCH --mem=32G
+#SBATCH --mem=16G
 
 # Job name and output
 #SBATCH -J bbduk_PE
@@ -28,7 +28,7 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # Set constant variables
-numThreads=8
+numThreads=1
 
 # Load module
 module load bbmap
@@ -43,11 +43,12 @@ echo "bbduk version: "$(bbduk.sh --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 echo $(date +"[%b %d %H:%M:%S] Running bbduk...")
 
-bbduk.sh -Xmx4g in=${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
+bbduk.sh -Xmx16g in=${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 out=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 ref=${adapterFile} \
-ktrim=r k=34 mink=11 hdist=1 tpe tbo \
+ktrim=r k=31 mink=11 hdist=1 tpe tbo \
 qtrim=r trimq=10 \
+stats=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_stats.txt \
 t=${numThreads}
 
 echo $(date +"[%b %d %H:%M:%S] Done")
