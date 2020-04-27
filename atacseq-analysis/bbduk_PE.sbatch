@@ -7,7 +7,7 @@
 ## cd /Users/coke6162/repos/scripts/atacseq-analysis
 ## inDir=/Users/coke6162/project20xx_atacseq/fastq \
 ## outDir=/Users/coke6162/project20xx_atacseq/bbduk \
-## adapterFile=/opt/bbduk/0.36/adapters/TruSeq3-PE.fa \
+## adapterFile=/opt/bbmap/38.05/resources/adapters.fa \
 ## sbatch --array 0-42 bbduk_PE.sbatch
 
 ## adapterFile options: NexteraPE-PE.fa, TruSeq2-PE.fa, TruSeq3-PE-2.fa, TruSeq3-PE.fa
