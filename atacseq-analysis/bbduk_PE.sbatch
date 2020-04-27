@@ -15,7 +15,7 @@
 ## General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 8
+#SBATCH -n 1
 #SBATCH --time=2:00:00
 #SBATCH --mem=32G
 
@@ -30,7 +30,7 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # Set constant variables
-numThreads=8
+numThreads=1
 
 # Load module
 module load bbmap
