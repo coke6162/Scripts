@@ -61,4 +61,9 @@ bamqc \
 -nw 400 \
 -hm 3
 
+# Write file containing coverage info (for easy reference)
+echo $(date +"[%b %d %H:%M:%S] Extracting coverage info...")
+
+grep "mean coverageData" ${outDir}/genome_results.txt > ${outDir}/mean_coverage.txt
+
 echo $(date +"[%b %d %H:%M:%S] Done")
