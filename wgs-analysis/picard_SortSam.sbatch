@@ -32,7 +32,7 @@ numThreads=8
 # Define path variables
 inDir=${parentDir}/${projectName}/bwa
 outDir=${parentDir}/${projectName}/bwa/picard/sorted
-tmpDir=${parentDir}/${projectName}/java_tmp
+tmpDir=${parentDir}/${projectName}/java_tmp/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}
 
 # Define query files
 queries=($(ls ${inDir}/*.sorted.bam | xargs -n 1 basename))
@@ -46,14 +46,14 @@ echo "Processing sample: "${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}
 
 echo "Making temporary directory..."
 
-mkdir -p ${tmpDir}/${SLURM_JOBID}
+mkdir -p ${tmpDir}
 
 # Run picard
 echo $(date +"[%b %d %H:%M:%S] Sorting bam files with picard...")
 
 java \
 -Xmx8G \
--Djava.io.tmpdir=${tmpDir}/${SLURM_JOBID} \
+-Djava.io.tmpdir=${tmpDir} \
 -XX:ParallelGCThreads=${numThreads} \
 -jar /opt/picard/2.6.0/picard-2.6.0.jar \
 SortSam \
