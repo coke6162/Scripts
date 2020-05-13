@@ -35,7 +35,7 @@ outDir=${parentDir}/${projectName}/bwa/picard/sorted
 tmpDir=${parentDir}/${projectName}/java_tmp/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}
 
 # Define query files
-queries=($(ls ${inDir}/*.sorted.bam | xargs -n 1 basename))
+queries=($(ls ${inDir}/*.bam | xargs -n 1 basename))
 
 # Make temporary directory
 pwd; hostname; date
@@ -58,7 +58,7 @@ java \
 -jar /opt/picard/2.6.0/picard-2.6.0.jar \
 SortSam \
 INPUT=${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
-OUTPUT=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
+OUTPUT=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bam}.sorted.bam \
 SORT_ORDER=coordinate \
 VALIDATION_STRINGENCY=STRICT
 
