@@ -56,8 +56,6 @@ echo "Samtools version: "$(samtools --version)
 
 echo "Processing sample: "${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}
 
-mkdir -p ${outDir}/samtools_tmp/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}
-
 # Run bwa
 echo $(date +"[%b %d %H:%M:%S] Aligning reads to the genome & outputting sam files")
 
@@ -78,25 +76,14 @@ samtools flagstat \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam \
 > ${outDir}/flagstat/${queries[$SLURM_ARRAY_TASK_ID]}_flagstat.txt
 
-# Convert sam files to bam files & sort
-echo $(date +"[%b %d %H:%M:%S] Converting sam to bam & sorting")
+# Convert sam files to bam files
+echo $(date +"[%b %d %H:%M:%S] Converting sam to bam")
 
 samtools view \
 -@ ${numThreads} \
 -Sb \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam \
-| samtools sort \
--T ${outDir}/samtools_tmp/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID} \
--@ ${numThreads} \
-- \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam
-
-# Index sorted bam files
-echo $(date +"[%b %d %H:%M:%S] Indexing sorted bams...")
-
-samtools index \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.bam.bai
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam 
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bam
 
 # Remove intermediate files
 rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam
