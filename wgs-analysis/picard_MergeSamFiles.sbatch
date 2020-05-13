@@ -7,7 +7,6 @@
 ## cd /Users/coke6162/repos/scripts/wgs-analysis
 ## parentDir=/scratch/Users/coke6162 \
 ## projectName=20200204_wgs_bosTau9_USMARC_BL3_hybrid \
-## refDir=/Users/coke6162/repos/project_files/20200204_wgs_bosTau9_USMARC_BL3_hybrid \
 ## sbatch --array 0-79 picard_MergeSamFiles.sbatch
 
 ## General settings
@@ -36,7 +35,9 @@ outDir=${parentDir}/${projectName}/bwa/picard/merged
 tmpDir=${parentDir}/${projectName}/java_tmp/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}
 
 # Define query samples
-queries=($(cat ${refDir}/samples.txt))
+# This assumes your samples are uniquely identified at the start, followed by an underscore
+# i.e. "Limousin1_run1_lane1.sorted.bam"
+queries=($(ls ${inDir}/*.sorted.bam | xargs -n 1 basename | cut -d_ -f1 | sort | uniq))
 
 # Make temporary directory
 pwd; hostname; date
