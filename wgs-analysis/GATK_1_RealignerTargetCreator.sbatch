@@ -49,7 +49,7 @@ echo "Making temporary directory..."
 mkdir -p ${tmpDir}/${SLURM_JOBID}
 
 # Run GATK
-echo $(date +"[%b %d %H:%M:%S] Finding reagions that need to be realigned...")
+echo $(date +"[%b %d %H:%M:%S] Finding regions that need to be realigned...")
 
 java \
 -Xmx30G \
