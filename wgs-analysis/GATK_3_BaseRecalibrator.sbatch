@@ -12,7 +12,7 @@
 ## sbatch --array 0-6 GATK_3_BaseRecalibrator.sbatch
 
 ## General settings
-#SBATCH -p short
+#SBATCH -p long
 #SBATCH -N 1
 #SBATCH -n 4
 #SBATCH --time=3-0:00:00
