@@ -64,6 +64,8 @@ bamqc \
 # Write file containing coverage info (for easy reference)
 echo $(date +"[%b %d %H:%M:%S] Extracting coverage info...")
 
-grep "mean coverageData" ${outDir}/genome_results.txt > ${outDir}/mean_coverage.txt
+grep "mean coverageData" \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_merged_marked_realigned_recalibrated.sorted.bam}/genome_results.txt \
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%_merged_marked_realigned_recalibrated.sorted.bam}/mean_coverage.txt
 
 echo $(date +"[%b %d %H:%M:%S] Done")
