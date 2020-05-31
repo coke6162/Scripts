@@ -39,7 +39,7 @@ module load bwa/0.7.15 samtools/1.8
 # Define query files
 # Removes R1/R2.fastq.gz to generate a unique identifier for each pair of files
 # Modify to fit input file name if necessary
-queries=($(ls ${inDir}/*.fastq.gz | xargs -n 1 basename | sed --expression='s/_R1_bbduk.fastq.gz//g' | sed --expression='s/_R2_bbduk.fastq.gz//g' | uniq))
+queries=($(ls ${inDir}/*.fastq.gz | xargs -n 1 basename | sed --expression='s/_1_bbduk.fastq.gz//g' | sed --expression='s/_2_bbduk.fastq.gz//g' | uniq))
 
 # Make temporary directories
 pwd; hostname; date
@@ -58,8 +58,8 @@ echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 bwa mem \
 -t ${numThreads} \
 ${bwaIndexDir}/${bwaIndex} \
-${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_bbduk.fastq.gz \
-${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_bbduk.fastq.gz \
+${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_1_bbduk.fastq.gz \
+${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_2_bbduk.fastq.gz \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam
 
 # Generate flagstat files from unfiltered sam files
