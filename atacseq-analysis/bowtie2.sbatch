@@ -16,7 +16,7 @@
 #SBATCH -N 1
 #SBATCH -n 8
 #SBATCH --time=24:00:00
-#SBATCH --mem=64G
+#SBATCH --mem=16G
 
 # Job name and output
 #SBATCH -J bowtie2
@@ -36,7 +36,7 @@ module load bowtie
 module load samtools
 
 # Define query files
-queries=($(ls ${inDir}/*fastq.gz | xargs -n 1 basename | sed --expression='s/_R1_paired.fastq.gz//g' | sed --expression='s/_R2_paired.fastq.gz//g' | uniq))
+queries=($(ls ${inDir}/*fastq.gz | xargs -n 1 basename | sed --expression='s/_1.fastq.gz//g' | sed --expression='s/_2.fastq.gz//g' | uniq))
 
 # Align reads to bosTau8
 pwd; hostname; date
@@ -54,8 +54,8 @@ bowtie2 \
 --fr \
 --threads ${numThreads} \
 -x ${indexDir}/${name} \
--1 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_paired.fastq.gz \
--2 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_paired.fastq.gz \
+-1 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_1.fastq.gz \
+-2 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_2.fastq.gz \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam
 
 # Convert sam files to bam files, filtering out low quality (<10) & unmapped (through '-F 4' option) reads
