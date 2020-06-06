@@ -37,11 +37,16 @@ module load sambamba
 # Define query files
 queries=($(ls ${inDir}/*.sorted.bam | xargs -n 1 basename))
 
-# Filter out reads mapping to mitochondrial genes
+# Make temporary directories
 pwd; hostname; date
 
-echo "Removing reads mapping to mitochondrial genes"
-echo "Samtools version: "$(samtools --version)
+echo "Making temporary directories..."
+
+mkdir -p ${inDir}/tmp_sambamba
+mkdir -p ${inDir}/tmp_bam/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}
+
+# Filter out reads mapping to mitochondrial genes
+echo $(date +"[%b %d %H:%M:%S] Removing fragments mapping to mitochondrial DNA")
 
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
@@ -49,21 +54,21 @@ samtools view \
 -@ ${numThreads} \
 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 | egrep -v chrM \
-| samtools view -bT ${refFile} -o ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.bam
+| samtools view -bT ${refFile} -o ${inDir}/tmp_bam/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.bam
 
-echo $(date +"[%b %d %H:%M:%S]")
-
-# Sort bam files and remove duplicates with sambamba
-echo "Sorting bam files & removing duplicates with sambamba"
-echo "Sambamba version: see stdout"`sambamba --version`
+# Sort filtered bam files
+echo $(date +"[%b %d %H:%M:%S] Sorting filtered bam files with sambamba")
 
 sambamba sort \
 --natural-sort \
 --nthreads=${numThreads} \
---memory-limit=4G \
---tmpdir=${inDir}/tmp \
---out=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.bam \
-${inDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.bam
+--memory-limit=2G \
+--tmpdir=${inDir}/tmp/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam} \
+--out=${inDir}/tmp_bam/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.bam \
+${inDir}/tmp_bam/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.bam
+
+# Remove duplicates with sambamba
+echo $(date +"[%b %d %H:%M:%S] Removing duplicates with sambamba")
 
 sambamba markdup \
 --remove-duplicates \
@@ -71,35 +76,35 @@ sambamba markdup \
 --overflow-list-size=600000 \
 --hash-table-size=4194304 \
 --tmpdir=${inDir}/tmp \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.bam \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.dedup.bam
-
-rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.bam
-
-echo $(date +"[%b %d %H:%M:%S]")
+${inDir}/tmp_bam/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.bam \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.dedup.bam
 
 # Run samtools flagstat 
-echo "Running flagstat"
+echo $(date +"[%b %d %H:%M:%S] Running samtools flagstat on dedup'd bams")
 
 samtools flagstat \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.dedup.bam \
-> ${outDir}/flagstat/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.dedup.flagstat.txt
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.dedup.bam \
+> ${outDir}/flagstat/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.dedup.flagstat.txt
 
-echo $(date +"[%b %d %H:%M:%S]")
-
-# Resort dedup output
-echo "Sort dedup bams"
+# Sort dedup'd bams
+echo $(date +"[%b %d %H:%M:%S] Sorting dedup'd bams")
 
 samtools sort \
 -@ ${numThreads} \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.dedup.bam \
--o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.dedup.resorted.bam
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.dedup.bam \
+-o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.dedup.sorted.bam
 
-# Index resorted bams
-echo "Index resorted bams"
+# Index sorted dedup'd bams
+echo $(date +"[%b %d %H:%M:%S] Indexing sorted dedup'd bams")
 
 samtools index \
 -@ {numThreads} \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.dedup.resorted.bam
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.dedup.sorted.bam
+
+# Remove temporary files and directories
+echo $(date +"[%b %d %H:%M:%S] Removing temporary files & directories")
+
+rm -r ${inDir}/tmp/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}
+rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.sorted.bam}.filtered.sorted.bam
 
 echo $(date +"[%b %d %H:%M:%S] Done")
