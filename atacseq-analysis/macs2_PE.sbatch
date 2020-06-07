@@ -33,7 +33,7 @@
 module load python/2.7.14/MACS/2.1.1
 
 # Define query files
-queries=($(ls ${inDir}/*.filtered.sorted.dedup.bam | xargs -n 1 basename))
+queries=($(ls ${inDir}/*.filtered.dedup.sorted.bam | xargs -n 1 basename))
 
 # Call peaks with macs2
 pwd; hostname; date
@@ -45,7 +45,7 @@ echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
 macs2 callpeak \
 --treatment ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
---name ${queries[$SLURM_ARRAY_TASK_ID]%.filtered.sorted.dedup.bam} \
+--name ${queries[$SLURM_ARRAY_TASK_ID]%.filtered.dedup.sorted.bam} \
 --outdir ${outDir} \
 --gsize ${genomeSize} \
 --SPMR -B --keep-dup all --format BAMPE --call-summits
