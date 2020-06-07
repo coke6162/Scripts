@@ -32,7 +32,7 @@
 libraryDir=/Users/coke6162/R/x86_64-redhat-linux-gnu-library/3.5/ATACseqQC/extdata
 
 # Define query files
-queries=($(ls ${inDir}/*.sam | xargs -n 1 basename | sed 's/.sam//g'))
+queries=($(ls ${inDir}/*.sorted.bam | xargs -n 1 basename | sed 's/.sorted.bam//g'))
 
 # Load modules
 module load samtools
