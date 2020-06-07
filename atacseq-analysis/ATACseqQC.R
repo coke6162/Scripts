@@ -5,8 +5,8 @@
 
 # Load required packages
 library(ATACseqQC)
-library(BSgenome.Btaurus.UCSC.bosTau8)
-library(TxDb.Btaurus.UCSC.bosTau8.refGene)
+library(BSgenome.Btaurus.UCSC.bosTau9)
+library(TxDb.Btaurus.UCSC.bosTau9.refGene)
                        
 # Read name of input bam and remove last suffix.
 args = commandArgs(trailingOnly=TRUE)
