@@ -44,6 +44,6 @@ echo $(date +"[%b %d %H:%M:%S] Computing matrix of bam alignment counts...")
 bedtools multicov \
 -bams ${bams} \
 -bed ${bedFile} \
-> ${outDir}/bamCounts_${name}.tab
+> ${outDir}/bamCounts_${name}_d100.tab
 
 echo $(date +"[%b %d %H:%M:%S] Done")
