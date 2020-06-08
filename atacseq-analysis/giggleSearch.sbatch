@@ -15,7 +15,7 @@
 # General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -c 8
+#SBATCH -c 1
 #SBATCH --time=6:00:00
 #SBATCH --mem=8GB
 #SBATCH --propagate=NONE
@@ -42,24 +42,27 @@ pwd; hostname; date
 echo "samtools version: "$(samtools --version)
 echo "Processing peak file: "${queries[$SLURM_ARRAY_TASK_ID]}
 
-# add '.bed' to the end of each file
-# giggle requires all input files to have '.bed' as a suffix
-# I add a step below to remove the '.bed' suffix
-echo $(date +"[%b %d %H:%M:%S] Adding suffix...")
+# make a temporary directory
+echo $(date +"[%b %d %H:%M:%S] Making a temporary directory...")
 
-rename ${suffix} ${suffix}.bed ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}
+mkdir -p ${inDir}/tmp
+
+# add '.bed' suffix
+echo $(date +"[%b %d %H:%M:%S] Adding '.bed' suffix...")
+
+cp ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} ${inDir}/tmp/${queries[$SLURM_ARRAY_TASK_ID]}.bed
 
 # bgzip each bed file
 echo $(date +"[%b %d %H:%M:%S] Starting bgzip...")
 
-bgzip ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bed
+bgzip ${inDir}/tmp/${queries[$SLURM_ARRAY_TASK_ID]}.bed
 
 # run giggle search
 echo $(date +"[%b %d %H:%M:%S] Starting giggle search...")
 
-giggle search \
+/Shares/CL_Shared/scripts/atma/giggle/bin/giggle search \
 -i ${repeatIndexDir} \
--q ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bed.gz \
+-q ${inDir}/tmp/${queries[$SLURM_ARRAY_TASK_ID]}.bed.gz \
 -s -g ${genomeSize} \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.giggleStats.tmp
 
@@ -69,15 +72,13 @@ echo $(date +"[%b %d %H:%M:%S] Removing full repeat name...")
 awk '(NR>1){print $0}' ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.giggleStats.tmp \
 | sed 's/.bed.gz//g' \
 | sed "s|$repeatPath||g" \
-| sed "s|sorted/||g" \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.giggleStats
 
 # sort output by descending giggle score
 # note: only use unsorted output as input into makeGiggleMatrix.sbatch!
 echo $(date +"[%b %d %H:%M:%S] Sorting by descending combo score...")
 
-sort -k8,8rn \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.giggleStats \
+sort -k8,8rn ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.giggleStats \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.giggleStats.sorted
 
 # remove temporary file
@@ -85,14 +86,9 @@ echo $(date +"[%b %d %H:%M:%S] Removing intermediate file...")
 
 rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.giggleStats.tmp
 
-# decompress bgzip'd bed files
-echo $(date +"[%b %d %H:%M:%S] Decompressing bgzip'd bed files...")
+# remove '.bed.gz' files
+echo $(date +"[%b %d %H:%M:%S] Removing '.bed.gz' files...")
 
-bgzip -d ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bed.gz
-
-# remove '.bed' suffix added on earlier
-echo $(date +"[%b %d %H:%M:%S] Adding suffix...")
-
-rename ${suffix}.bed ${suffix} ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.bed
+rm ${inDir}/tmp/${queries[$SLURM_ARRAY_TASK_ID]}.bed.gz
 
 echo $(date +"[%b %d %H:%M:%S] Done")
