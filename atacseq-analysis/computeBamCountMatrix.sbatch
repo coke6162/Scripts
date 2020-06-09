@@ -29,7 +29,7 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # load modules
-module load bedtools
+module load bedtools/2.25.0
 
 # define key variables
 bams=$(cat ${bamFile})
