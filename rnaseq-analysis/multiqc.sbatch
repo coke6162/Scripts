@@ -35,10 +35,10 @@ multiqc=/scratch/Shares/public/singularity/multiqc-1.7.img
 pwd; hostname; date
 
 echo "Singularity version: "$(singularity --version)
-echo "MultiQC version: "$(singularity exec --bind /Users/CL_Shared ${multiqc} multiqc --version)
+echo "MultiQC version: "$(singularity exec --bind /Shares/CL_Shared ${multiqc} multiqc --version)
 echo $(date +"[%b %d %H:%M:%S] Running MultiQC...")
 
-singularity exec --bind /Users/CL_Shared ${multiqc} \
+singularity exec --bind /Shares/CL_Shared ${multiqc} \
 multiqc \
 ${inDir}/*.zip \
 --outdir ${outDir}
