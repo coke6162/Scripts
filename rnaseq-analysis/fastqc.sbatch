@@ -12,7 +12,7 @@
 #SBATCH -p short
 #SBATCH -N 1
 #SBATCH -n 8
-#SBATCH --time=0:30:00
+#SBATCH --time=1:00:00
 #SBATCH --mem=4GB
 
 # Job name and output
