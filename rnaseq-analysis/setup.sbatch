@@ -42,7 +42,6 @@ mkdir -p ${projectName}
 mkdir -p ${projectName}/fastq
 mkdir -p ${projectName}/fastq/fastqc
 mkdir -p ${projectName}/fastq/fastqc/multiqc
-mkdir -p ${projectName}/fastqc/multiqc
 mkdir -p ${projectName}/bbduk
 mkdir -p ${projectName}/bbduk/log
 mkdir -p ${projectName}/bbduk/fastqc
@@ -52,5 +51,6 @@ mkdir -p ${projectName}/featureCounts
 mkdir -p ${projectName}/bigwigs
 mkdir -p ${projectName}/DESeq2
 mkdir -p ${projectName}/DESeq2/png
+mkdir -p ${projectName}/DESeq2/bed
 
 echo $(date +"[%b %d %H:%M:%S] Done")
