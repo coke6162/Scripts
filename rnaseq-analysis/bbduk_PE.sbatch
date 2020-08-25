@@ -1,16 +1,14 @@
 #!/bin/bash
 
 ## Script for running bbduk
-## Date: 4 May 2019
+## Date: 25 August 2020
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/rnaseq-analysis
 ## inDir=/Users/coke6162/project20xx_rnaseq/fastq \
 ## outDir=/Users/coke6162/project20xx_rnaseq/bbduk \
-## adapterFile=/opt/trimmomatic/0.36/adapters/TruSeq3-PE.fa \
+## adapterFile=/opt/bbmap/38.05/resources/adapters.fa \
 ## sbatch --array 0-42 bbduk_PE.sbatch
-
-## adapterFile options: NexteraPE-PE.fa, TruSeq2-PE.fa, TruSeq3-PE-2.fa, TruSeq3-PE.fa
 
 ## General settings
 #SBATCH -p short
@@ -38,7 +36,7 @@ module load bbmap
 # Define query files
 # Removes R1/R2 to generate a unique identifier for each pair of files
 # Modify to fit input file name if necessary
-queries=($(ls ${inDir}/*fastq.gz | xargs -n 1 basename | sed --expression='s/_R1.fastq.gz//g' | sed --expression='s/_R2.fastq.gz//g' | uniq))
+queries=($(ls ${inDir}/*fastq.gz | xargs -n 1 basename | sed --expression='s/_1.fastq.gz//g' | sed --expression='s/_2.fastq.gz//g' | uniq))
 
 # Run bbduk
 pwd; hostname; date
@@ -50,10 +48,10 @@ echo $(date +"[%b %d %H:%M:%S] Running bbduk...")
 bbduk.sh \
 -Xmx32g \
 t=${numThreads} \
-in1=${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1.fastq.gz \
-in2=${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2.fastq.gz \
-out1=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_bbduk.fastq.gz \
-out2=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_bbduk.fastq.gz \
+in1=${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_1.fastq.gz \
+in2=${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_2.fastq.gz \
+out1=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_1_bbduk.fastq.gz \
+out2=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_2_bbduk.fastq.gz \
 ref=${adapterFile} \
 ktrim=r \
 k=23 \
