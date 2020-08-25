@@ -7,6 +7,7 @@
 ## cd /Users/coke6162/repos/scripts/rnaseq-analysis/
 ## inDir=/Users/coke6162 \
 ## projectName=project20xx_rnaseq \
+## refDir=/Users/coke6162/repos/project_files/project20xx_rnaseq \
 ## sbatch --array 0-40 sraDownload.sbatch
 
 # General settings
@@ -14,7 +15,7 @@
 #SBATCH -N 1
 #SBATCH -c 1
 #SBATCH --time=6:00:00
-#SBATCH --mem=32GB
+#SBATCH --mem=16GB
 
 # Job name and output
 #SBATCH -J sraDownload
@@ -27,10 +28,10 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # load modules
-module load sra
+module load sra/2.9.2
 
 # set query files
-queries=($(cat ${inDir}/repos/project_files/${projectName}/sraDownload.txt | awk '(NR>1){print $1}'))
+queries=($(cat ${refDir}/sraDownload.txt | awk '(NR>1){print $1}'))
 
 # run the thing
 pwd; hostname; date
