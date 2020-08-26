@@ -37,8 +37,8 @@ numThreads=8
 
 # Set query files
 # note: remove R1/R2 to generate a unique identifier for each pair of files
-queries=($(ls ${inDir}/*_bbduk.fastq.gz | xargs -n 1 basename | sed 's/_R1_bbduk.fastq.gz//g' \
-	| sed 's/_R2_bbduk.fastq.gz//g' | uniq))
+queries=($(ls ${inDir}/*_bbduk.fastq.gz | xargs -n 1 basename | sed 's/_1_bbduk.fastq.gz//g' \
+	| sed 's/_2_bbduk.fastq.gz//g' | uniq))
 
 # Load hisat2 and samtools
 module load hisat2 samtools
@@ -56,8 +56,8 @@ hisat2 \
 --rna-strandness ${rnaStrandness} \
 --no-softclip \
 -x ${hisatIndexDir}/${hisatIndex} \
--1 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_bbduk.fastq.gz \
--2 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_bbduk.fastq.gz \
+-1 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_1_bbduk.fastq.gz \
+-2 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_2_bbduk.fastq.gz \
 | samtools view -q 10 -Sb - \
 | samtools sort -@ ${numThreads} - -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sorted.uniq.bam
 
