@@ -31,6 +31,11 @@
 # Set constant variables
 numThreads=4
 
+# Load java through module
+# The default java on Fiji is OpenJDK 11.0.1
+# To get GATK/3.7 to work, we need Sun/Oracle java 1.8
+module load java
+
 # Define path variables
 inDir=${parentDir}/${projectName}/gatk/realigned
 outDir=${parentDir}/${projectName}/gatk/recalibrated
