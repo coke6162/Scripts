@@ -1,13 +1,14 @@
 #!/bin/bash
 
 ## Script for running fimo
-## Date: June 14 2019
+## Date: September 2 2020
 
 ## Example usage:
-## cd /Users/coke6162/repos/project_files/20190613_ATAC-seq_BL3.1
-## genomeName=bosTau9 \
+## cd /Users/coke6162/repos/scripts/genome-setup
+## fastaFile=/Shares/CL_Shared/db/genomes/bosTau9/fa/bosTau9.fa \
+## chromSizes=/Shares/CL_Shared/db/genomes/bosTau9/fa/bosTau9.chrom.sizes \
 ## pvalue=1e-4 \
-## motifFile=/Users/coke6162/repos/project_files/20190613_ATAC-seq_BL3.1/MA0137.3.meme \
+## motifFile=/Users/coke6162/repos/scripts/genome-setup/MA0137.3.meme \
 ## name=MA0137.3 \
 ## outDir=/Shares/CL_Shared/db/genomes/bosTau9/fimo/MA0137.3 \
 ## sbatch fimo.sbatch
@@ -16,7 +17,7 @@
 #SBATCH -p short
 #SBATCH -N 1
 #SBATCH -c 8
-#SBATCH --time=12:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mem=32GB
 
 # Job name and output
@@ -33,10 +34,6 @@
 module load meme
 module load python/2.7.14/numpy/1.14.1
 module load bedtools
-
-# Define key variables
-fastaFile=/Shares/CL_Shared/db/genomes/${genomeName}/fa/${genomeName}.main.fa
-chromSizes=/Shares/CL_Shared/db/genomes/${genomeName}/fa/${genomeName}.main.chrom.sizes
 
 # Make output directories
 pwd; hostname; date
