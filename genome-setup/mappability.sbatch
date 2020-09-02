@@ -35,6 +35,9 @@ export PATH="$PATH:/scratch/Shares/chuong/software/gem"
 # Define key variables
 numCPUs=16
 
+# Make output directory
+mkdir -p ${outDir}/
+
 # Create a gem index
 pwd; hostname; date
 
