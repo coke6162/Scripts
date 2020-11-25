@@ -1,11 +1,11 @@
 #!/bin/bash
 
-## Script to set up directory layout 
-## Date: 26 May 2019
+## Script to set up directory layout on /scratch
+## Date: 25 November 2020
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis
-## inDir=/Users/coke6162 \
+## inDir=/scratch/Users/coke6162 \
 ## projectName=project20xx_CUTnRUN \
 ## sbatch setup.sbatch
 
