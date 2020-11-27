@@ -5,8 +5,8 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis
-## inDir=/Users/coke6162/project20xx_cutnrun/fastqc \
-## outDir=/Users/coke6162/project20xx_cutnrun/fastqc/multiqc \
+## inDir=/scratch/Users/coke6162/project20xx_cutnrun/fastqc \
+## outDir=/scratch/Users/coke6162/project20xx_cutnrun/fastqc/multiqc \
 ## sbatch multiqc.sbatch
 
 # General settings
@@ -39,7 +39,7 @@ echo "Singularity version: "$(singularity --version)
 echo "MultiQC version: "$(singularity exec --bind /Users/CL_Shared ${multiqc} multiqc --version)
 echo $(date +"[%b %d %H:%M:%S] Running MultiQC...")
 
-singularity exec --bind /Shares/CL_Shared ${multiqc} \
+singularity exec --bind /scratch ${multiqc} \
 multiqc \
 ${inDir}/*.zip \
 --outdir ${outDir}
