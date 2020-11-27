@@ -42,7 +42,7 @@ module load samtools
 module load bedtools
 
 # Define query files
-queries=($(ls ${inDir}/*fastq.gz | xargs -n 1 basename | sed --expression='s/_R1_paired.fastq.gz//g' | sed --expression='s/_R2_paired.fastq.gz//g' | uniq))
+queries=($(ls ${inDir}/*fastq.gz | xargs -n 1 basename | sed --expression='s/_1_bbduk.fastq.gz//g' | sed --expression='s/_2_bbduk.fastq.gz//g' | uniq))
 
 # Run bwa
 pwd; hostname; date
@@ -57,8 +57,8 @@ echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 bwa mem \
 -t ${numThreads} \
 ${bwaIndexDir}/${bwaIndex} \
-${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_paired.fastq.gz \
-${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_paired.fastq.gz \
+${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_1_bbduk.fastq.gz \
+${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_2_bbduk.fastq.gz \
 > ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}.sam
 
 # Generate flagstat files from unfiltered sam files
