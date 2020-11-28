@@ -82,10 +82,10 @@ ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_merged_filtered.sorted.bam \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_merged_filtered.sorted.bam.bai
 
 # Move input files
-#echo $(date +"[%b %d %H:%M:%S] Moving input files...")
-#
-#mkdir -p ${outDir}/unmerged
-#
-#mv $(cat ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_merge_list.txt) ${outDir}/unmerged 
+echo $(date +"[%b %d %H:%M:%S] Moving input files...")
+
+mkdir -p ${outDir}/unmerged
+
+mv $(cat ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_merge_list.txt) ${outDir}/unmerged 
 
 echo $(date +"[%b %d %H:%M:%S] Done")
