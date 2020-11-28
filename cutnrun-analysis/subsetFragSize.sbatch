@@ -36,10 +36,24 @@ module load singularity samtools
 deeptools=/scratch/Shares/public/singularity/deeptools-3.0.1-py35_1.img
 numThreads=8
 
-# Use "alignmentSieve" to filter reads by size (<120 or >120bp)
+# Define path variables
+tmpDir=${inDir}/samtools_tmp/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}
+
+# Make temporary directory
 pwd; hostname; date
 
+echo "samtools version: "$(samtools --version)
+
+echo "Processing sample: "${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}
+
+echo "Making temporary directory..."
+
+mkdir -p ${tmpDir}
+
+# Use "alignmentSieve" to filter reads by size (<120 or >120bp)
 echo $(date +"[%b %d %H:%M:%S] Starting deeptools alignmentSieve...")
+
+echo "Processing sample: "${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam
 
 singularity exec --bind /scratch ${deeptools} \
 alignmentSieve \
@@ -54,6 +68,7 @@ echo $(date +"[%b %d %H:%M:%S] Sorting bams (less than 120)...")
 
 samtools sort \
 -@ ${numThreads} \
+-T ${tmpDir} \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan120_filtered.bam.tmp \
 -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan120_filtered.sorted.bam
 
@@ -63,6 +78,7 @@ echo $(date +"[%b %d %H:%M:%S] Sorting bams (more than 120)...")
 
 samtools sort \
 -@ ${numThreads} \
+-T ${tmpDir} \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_moreThan120_filtered.bam.tmp \
 -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_moreThan120_filtered.sorted.bam
 
