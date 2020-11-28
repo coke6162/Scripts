@@ -41,7 +41,7 @@ pwd; hostname; date
 
 echo $(date +"[%b %d %H:%M:%S] Starting deeptools alignmentSieve...")
 
-singularity exec --bind /Shares/CL_Shared ${deeptools} \
+singularity exec --bind /scratch ${deeptools} \
 alignmentSieve \
 --bam ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam \
 --maxFragmentLength 120 \
