@@ -28,7 +28,7 @@
 #SBATCH --mail-user=conor.j.kelly@colorado.edu
 
 # Define query files
-queries=($(ls ${inDir}/*.bam | xargs -n 1 basename | sed --expression='s/_filtered.sorted.bam//g' | uniq))
+queries=($(ls ${inDir}/*_filtered.sorted.bam | xargs -n 1 basename | sed --expression='s/_filtered.sorted.bam//g' | uniq))
 
 # load modules
 module load bedtools samtools
