@@ -57,7 +57,6 @@ echo $(date +"[%b %d %H:%M:%S] Creating a txt file giving names of all files to 
 ls ${inDir} | grep "^${queries[$SLURM_ARRAY_TASK_ID]}.*bam$" - | sed 's|^|'${inDir}'/|' > ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_merge_list.txt
 ls ${inDir} | grep "^${myVar}.*bam$" - | sed 's|^|'${inDir}'/|'
 
-
 # Merge bams with samtools
 echo $(date +"[%b %d %H:%M:%S] Merging bam files with samtools...")
 
