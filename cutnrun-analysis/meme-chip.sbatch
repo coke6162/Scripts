@@ -44,7 +44,7 @@ echo "meme-chip version: "$(meme-chip -version)
 echo "Processing file: "${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.fa
 echo "Searching against database: "${dbFile}
 
-meme-chip \
+/Shares/CL_Shared/bin/meme/bin/meme-chip \
 -oc ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 -ccut 100 \
 -order 1 \
