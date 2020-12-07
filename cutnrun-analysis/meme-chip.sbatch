@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## Script for running meme-chip
-## Date: 19 November 2019
+## Date: 7 December 2020
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis
@@ -14,7 +14,7 @@
 #SBATCH -p long
 #SBATCH -N 1
 #SBATCH -n 1
-#SBATCH --time=3-0:00:00
+#SBATCH --time=5-0:00:00
 #SBATCH --mem=64G
 
 # Job name and output
@@ -33,12 +33,13 @@ queries=($(ls ${inDir}/*.fa | xargs -n 1 basename | sed 's/.fa//g' | uniq))
 # make output directory
 pwd; hostname; date
 
-echo "Making output directory..."
+echo "Making output & summary directories..."
 
 mkdir -p ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}
+mkdir -p ${outDir}/summary
 
 # run the thing
-echo "Starting meme-chip..."
+echo $(date +"[%b %d %H:%M:%S] Starting meme-chip...")
 echo "meme-chip version: "$(meme-chip -version)
 
 echo "Processing file: "${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.fa
@@ -54,5 +55,10 @@ echo "Searching against database: "${dbFile}
 -meme-maxw 12 \
 -meme-nmotifs 10 \
 ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}.fa
+
+# copy results to convenient summary dir
+echo $(date +"[%b %d %H:%M:%S] Copying results to convenient summary directory...")
+
+cp ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}/meme-chip.html ${outDir}/summary/${queries[$SLURM_ARRAY_TASK_ID]}_meme-chip.html
 
 echo $(date +"[%b %d %H:%M:%S] Done")
