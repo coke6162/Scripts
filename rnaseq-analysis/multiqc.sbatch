@@ -35,7 +35,7 @@ multiqc=/scratch/Shares/public/singularity/multiqc-1.7.img
 pwd; hostname; date
 
 echo "Singularity version: "$(singularity --version)
-echo "MultiQC version: "$(singularity exec --bind /Shares/CL_Shared ${multiqc} multiqc --version)
+echo "MultiQC version: "$(singularity exec --bind /scratch/Users ${multiqc} multiqc --version)
 echo $(date +"[%b %d %H:%M:%S] Running MultiQC...")
 
 singularity exec --bind /scratch/Users ${multiqc} \
