@@ -5,8 +5,8 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/atacseq-analysis
-## refFile=/Users/CL_Shared/db/genomes/bosTau8/fa/bosTau8.fa \
-## outDir=/Users/CL_Shared/db/genomes/bosTau8/index \
+## refFile=/Shares/CL_Shared/db/genomes/bosTau8/fa/bosTau8.fa \
+## outDir=/Shares/CL_Shared/db/genomes/bosTau8/index \
 ## name=bosTau8
 ## sbatch bowtie2_index.sbatch
 
