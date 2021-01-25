@@ -90,10 +90,10 @@ mkdir -p ${projectName}/giggle/seacr/stringent/nonDE/LTR
 mkdir -p ${projectName}/giggle/seacr/stringent/nonDE/SINE
 mkdir -p ${projectName}/giggle/seacr/stringent/nonDE/LINE
 mkdir -p ${projectName}/giggle/seacr/stringent/nonDE/DNA
-mkdir -p ${projectName}/meme
-mkdir -p ${projectName}/meme/meme-chip
-mkdir -p ${projectName}/meme/meme-chip/seacr
-mkdir -p ${projectName}/meme/meme-chip/seacr/stringent
-mkdir -p ${projectName}/meme/meme-chip/seacr/stringent/slopSummits_b250
+mkdir -p ${projectName}/motif_analysis
+mkdir -p ${projectName}/motif_analysis/meme-chip
+mkdir -p ${projectName}/motif_analysis/meme-chip/seacr
+mkdir -p ${projectName}/motif_analysis/meme-chip/seacr/stringent
+mkdir -p ${projectName}/motif_analysis/meme-chip/seacr/stringent/slopSummits_b250
 
 echo $(date +"[%b %d %H:%M:%S] Done")
