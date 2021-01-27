@@ -16,7 +16,7 @@
 #SBATCH -N 1
 #SBATCH -n 8
 #SBATCH --time=24:00:00
-#SBATCH --mem=16G
+#SBATCH --mem=8G
 
 # Job name and output
 #SBATCH -J bowtie2
