@@ -1,14 +1,13 @@
 #!/bin/bash
 
 ## Script for uploading bigwigs to UCSC genome browser
-## Date: 31 May 2019
+## January 29 2021
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/atacseq-analysis
-## inDir=/Users/coke6162/project20xx_atacseq/bigwigs \
-## orderDir=/Users/coke6162/repos/project_files/project20xx_atacseq \
-## projectName=project20xx_atacseq \
-## trackDb=/Users/coke6162/hub/bosTau8/trackDb.txt \
+## inDir=/scratch/Users/coke6162/yyyymmdd_ATAC-seq_projectName/bigwigs \
+## projectName=yyyymmdd_ATAC-seq_projectName \
+## trackDb=/Users/coke6162/hub/bosTau9/trackDb.txt \
 ## sbatch hubload.sbatch
 
 # General settings
@@ -40,7 +39,6 @@ echo "Processing file: "${i}
 --input ${i} \
 --supertrack ${projectName} \
 --trackDb ${trackDb}
-echo $(date +"[%b %d %H:%M:%S] Done")
 done
 
 echo $(date +"[%b %d %H:%M:%S] Done")
