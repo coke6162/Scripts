@@ -1,21 +1,21 @@
 #!/bin/bash
 
 ## Script for running tss enrichment R script
-## Date: 3 May 2019
+## Date: 29 January 2021
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/atacseq-analysis
 ## scriptDir=/Users/coke6162/repos/scripts/atacseq-analysis \
-## inDir=/Users/coke6162/project20xx_atacseq/bowtie2/tss_enrich \
-## outDir=/Users/coke6162/project20xx_atacseq/bowtie2/tss_enrich \
+## inDir=/scratch/Users/coke6162/project20xx_atacseq/bowtie2/tss_enrich \
+## outDir=/scratch/Users/coke6162/project20xx_atacseq/bowtie2/tss_enrich \
 ## sbatch --array=0-3 tss_enrichment_score.sbatch
 
 ## General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 8
+#SBATCH -n 1
 #SBATCH --time=2:00:00
-#SBATCH --mem=32G
+#SBATCH --mem=1G
 
 # Job name and output
 #SBATCH -J tss_enrich
