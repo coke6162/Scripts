@@ -12,8 +12,8 @@
 # General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 4
-#SBATCH --time=0:30:00
+#SBATCH -n 1
+#SBATCH --time=1:00:00
 #SBATCH --mem=4GB
 
 # Job name and output
@@ -30,7 +30,7 @@
 module load fastqc
 
 # Define constant variables
-numThreads=4
+numThreads=1
 
 # Define query files
 queries=($(ls ${inDir}/*.fastq.gz | xargs -n 1 basename))
