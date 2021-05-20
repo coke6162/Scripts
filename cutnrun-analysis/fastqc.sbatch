@@ -14,7 +14,7 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --time=1:00:00
-#SBATCH --mem=4GB
+#SBATCH --mem=1GB
 
 # Job name and output
 #SBATCH -J fastqc
