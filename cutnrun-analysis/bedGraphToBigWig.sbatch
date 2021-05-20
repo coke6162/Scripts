@@ -13,9 +13,9 @@
 # General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 8
+#SBATCH -n 2
 #SBATCH --time=1:00:00
-#SBATCH --mem=32GB
+#SBATCH --mem=4GB
 
 # Job name and output
 #SBATCH -J bedGraphToBigWig
