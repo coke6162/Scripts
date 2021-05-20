@@ -12,9 +12,9 @@
 # General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 8
+#SBATCH -n 1
 #SBATCH --time=0:30:00
-#SBATCH --mem=4GB
+#SBATCH --mem=1GB
 
 # Job name and output
 #SBATCH -J multiqc
