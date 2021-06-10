@@ -6,7 +6,7 @@
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis-v2
 ## inDir=/scratch/Users/coke6162/yyyymmdd_projectName/1_raw_fastq \
-## reportsDir=/scrath/Users/coke6162/yyyymmdd_projectName/reports/raw_fastqc \
+## reportsDir=/scratch/Users/coke6162/yyyymmdd_projectName/reports/raw_fastqc \
 ## sbatch --array 0-7 make_fastqc_reports.sbatch
 
 # General settings
