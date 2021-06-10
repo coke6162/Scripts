@@ -16,7 +16,7 @@
 #SBATCH --mem=1GB
 
 # Job name and output
-#SBATCH -J set_up_project_directory
+#SBATCH -J setup
 #SBATCH -o /Users/%u/sbatch_script/output/slurm-%j.out
 #SBATCH -e /Users/%u/sbatch_script/error/slurm-%j.err
 
