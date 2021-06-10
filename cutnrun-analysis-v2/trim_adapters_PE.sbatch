@@ -14,8 +14,8 @@
 #SBATCH -p short
 #SBATCH -N 1
 #SBATCH -n 1
-#SBATCH --time=5:00:00
-#SBATCH --mem=1G
+#SBATCH --time=4:00:00
+#SBATCH --mem=2G
 
 # Job name and output
 #SBATCH -J bbduk
@@ -45,7 +45,7 @@ echo "bbduk version: "$(bbduk.sh --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 echo $(date +"[%b %d %H:%M:%S] Running bbduk...")
 
-bbduk.sh -Xmx1g in1=${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_1.fastq.gz \
+bbduk.sh -Xmx4g in1=${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_1.fastq.gz \
 in2=${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_2.fastq.gz \
 out1=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_1_trimmed.fastq.gz \
 out2=${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_2_trimmed.fastq.gz \
