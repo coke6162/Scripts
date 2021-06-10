@@ -6,7 +6,7 @@
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis-v2
 ## inDir=/scratch/Users/coke6162/yyyymmdd_projectName/1_raw_fastq \
-## reportsDir=/scratch/Users/coke6162/yyyymmdd_projectName/reports/raw_fastqc \
+## outDir=/scratch/Users/coke6162/yyyymmdd_projectName/reports/raw_fastqc \
 ## sbatch --array 0-7 make_fastqc_reports.sbatch
 
 # General settings
@@ -42,7 +42,7 @@ echo "FastQC version: "$(fastqc --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 echo $(date +"[%b %d %H:%M:%S] Running fastqc...")
 
-fastqc -o ${reportsDir} -f fastq -t ${numThreads} ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}
+fastqc -o ${outDir} -f fastq -t ${numThreads} ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}
 
 echo $(date +"[%b %d %H:%M:%S] Done")
 
