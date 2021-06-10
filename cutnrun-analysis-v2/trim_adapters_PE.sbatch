@@ -4,7 +4,7 @@
 ## Date: 9 June 2021
 
 ## Example usage:
-## cd /Users/coke6162/repos/scripts/cutnrun_analysis
+## cd /Users/coke6162/repos/scripts/cutnrun_analysis-v2
 ## inDir=/scratch/Users/coke6162/yyyymmdd_projectName/1_raw_fastq/control \
 ## outDir=/scratch/Users/coke6162/yyyymmdd_projectName/2_trimmed_fastq/control \
 ## adapterFile=/opt/bbmap/38.05/resources/adapters.fa \
