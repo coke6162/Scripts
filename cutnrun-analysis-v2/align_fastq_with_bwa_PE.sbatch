@@ -7,18 +7,18 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis-v2
-## reportsDir=/scratch/Users/coke6162/yyyymmdd_projectName/reports/alignment_stats \
 ## inDir=/scratch/Users/coke6162/yyyymmdd_projectName/2_trimmed_fastq/control \
 ## outDir=/scratch/Users/coke6162/yyyymmdd_projectName/3_bams/control \
 ## bwaIndex=/Shares/CL_Shared/db/genomes/bosTau9/index/bwa/bosTau9.fa \
 ## genomeChrFile=/Shares/CL_Shared/db/genomes/bosTau9/fa/bosTau9.chrom.sizes \
+## reportsDir=/scratch/Users/coke6162/yyyymmdd_projectName/reports/alignment_stats \
 ## sbatch --array 0-5 align_fastq_with_bwa_PE.sbatch
 
 ## General settings
 #SBATCH -p short
 #SBATCH -N 1
 #SBATCH -n 4
-#SBATCH --time=4:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mem=4GB
 
 # Job name and output
@@ -48,7 +48,6 @@ pwd; hostname; date
 echo "Aligning reads to the genome..."
 echo "bwa version: "$(bwa)
 echo "Samtools version: "$(samtools --version)
-echo "Bedtools version: "$(bedtools --version)
 
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 echo "Aligning to assembly: "${bwaIndex}
