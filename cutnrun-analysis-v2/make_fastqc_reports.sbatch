@@ -7,7 +7,7 @@
 ## cd /Users/coke6162/repos/scripts/cutnrun-analysis-v2
 ## inDir=/scratch/Users/coke6162/yyyymmdd_projectName/1_raw_fastq \
 ## outDir=/scratch/Users/coke6162/yyyymmdd_projectName/reports/raw_fastqc \
-## sbatch --array 0-7 make_fastqc_reports.sbatch
+## sbatch --array 0-0 make_fastqc_reports.sbatch
 
 # General settings
 #SBATCH -p short
