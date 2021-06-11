@@ -50,13 +50,13 @@ mkdir -p ${projectDir}/3_bams/control
 mkdir -p ${projectDir}/3_bams/histone
 mkdir -p ${projectDir}/3_bams/tf
 
-mkdir -p ${projectDir}/4_macs2_output_PE
-mkdir -p ${projectDir}/4_macs2_output_PE/histone
-mkdir -p ${projectDir}/4_macs2_output_PE/tf
+mkdir -p ${projectDir}/4_macs2_output_SE
+mkdir -p ${projectDir}/4_macs2_output_SE/histone
+mkdir -p ${projectDir}/4_macs2_output_SE/tf
 
-mkdir -p ${projectDir}/5_macs2_output_SE
-mkdir -p ${projectDir}/5_macs2_output_SE/histone
-mkdir -p ${projectDir}/5_macs2_output_SE/tf
+mkdir -p ${projectDir}/5_macs2_output_PE
+mkdir -p ${projectDir}/5_macs2_output_PE/histone
+mkdir -p ${projectDir}/5_macs2_output_PE/tf
 
 mkdir -p ${projectDir}/6_macs2_output_merged
 mkdir -p ${projectDir}/6_macs2_output_merged/histone
