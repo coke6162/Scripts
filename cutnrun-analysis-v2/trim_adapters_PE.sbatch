@@ -8,7 +8,7 @@
 ## inDir=/scratch/Users/coke6162/yyyymmdd_projectName/1_raw_fastq/control \
 ## outDir=/scratch/Users/coke6162/yyyymmdd_projectName/2_trimmed_fastq/control \
 ## adapterFile=/opt/bbmap/38.05/resources/adapters.fa \
-## sbatch --array 0-3 trim_adapters_PE.sbatch
+## sbatch --array 0-0 trim_adapters_PE.sbatch
 
 ## General settings
 #SBATCH -p short
