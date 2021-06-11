@@ -12,7 +12,7 @@
 ## bwaIndex=/Shares/CL_Shared/db/genomes/bosTau9/index/bwa/bosTau9.fa \
 ## genomeChrFile=/Shares/CL_Shared/db/genomes/bosTau9/fa/bosTau9.chrom.sizes \
 ## reportsDir=/scratch/Users/coke6162/yyyymmdd_projectName/reports/alignment_stats \
-## sbatch --array 0-5 align_fastq_with_bwa_PE.sbatch
+## sbatch --array 0-0 align_fastq_with_bwa_PE.sbatch
 
 ## General settings
 #SBATCH -p short
