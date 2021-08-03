@@ -5,8 +5,8 @@
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/wgs-analysis
-## inDir=/scratch/Users/identikey/yyyymmdd_projectName/bwa/picard/marked \
-## outDir=/scratch/Users/identikey/yyyymmdd_projectName/melt \
+## inDir=/scratch/Users/coke6162/yyyymmdd_projectName/bwa/picard/marked \
+## outDir=/scratch/Users/coke6162/yyyymmdd_projectName/melt \
 ## fastaFile=/Shares/CL_Shared/db/genomes/bosTau9/1000_Bull_Genomes_Project/fa/ARS-UCD1.2_Btau5.0.1Y.fa \
 ## sbatch --array 0-3 MELT_1_Preprocess.sbatch
 
@@ -25,7 +25,7 @@
 # Email notifications 
 #SBATCH --mail-type=END                                         
 #SBATCH --mail-type=FAIL                                        
-#SBATCH --mail-user=identikey@colorado.edu
+#SBATCH --mail-user=coke6162@colorado.edu
 
 # Set constant variables
 numThreads=1
