@@ -1,15 +1,14 @@
 #!/bin/bash
 
 ## Script for running MELT MakeVCF (Step 5)
-## Date: 14 February 2020 
+## Date: 3 August 2021
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/wgs-analysis
-## parentDir=/scratch/Users/coke6162 \
-## projectName=20200204_wgs_bosTau9_USMARC_BL3_hybrid \
-## zipDir=/Shares/CL_Shared/db/genomes/bosTau9/1000_Bull_Genomes_Project/repeats/MELT \
-## fastaFile=/Shares/CL_Shared/db/genomes/bosTau9/1000_Bull_Genomes_Project/fa/ARS-UCD1.2_Btau5.0.1Y.main.fa \
-## meiList=/Users/coke6162/repos/project_files/20200204_wgs_bosTau9_USMARC_BL3_hybrid/mei_list.txt \
+## meltDir=/scratch/Users/coke6162/yyyymmdd_projectName/melt \
+## zipDir=/scratch/Users/coke6162/yyyymmdd_projectName/melt/zip \
+## fastaFile=/Shares/CL_Shared/db/genomes/bosTau9/1000_Bull_Genomes_Project/fa/ARS-UCD1.2_Btau5.0.1Y.fa \
+## meiList=/scratch/Users/coke6162/yyyymmdd_projectName/melt/mei_list.txt \
 ## sbatch --array 0-5 MELT_4_MakeVCF.sbatch
 
 ## General settings
@@ -17,7 +16,7 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --time=12:00:00
-#SBATCH --mem=64GB
+#SBATCH --mem=32GB
 
 # Job name and output
 #SBATCH -J MakeVCF
@@ -37,9 +36,7 @@ module load bowtie
 module load samtools
 
 # Define path variables
-inDir=${parentDir}/${projectName}/melt
-outDir=${parentDir}/${projectName}/melt
-tmpDir=${parentDir}/${projectName}/java_tmp/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}
+tmpDir=${meltDir}/java_tmp/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}
 
 # Define query files
 queries=($(cat ${meiList} | xargs -n 1 basename | sed 's/_MELT.zip//g'))
@@ -55,15 +52,15 @@ mkdir -p ${tmpDir}
 echo $(date +"[%b %d %H:%M:%S] Running MELT MakeVCF...")
 
 java \
--Xmx64G \
+-Xmx32G \
 -Djava.io.tmpdir=${tmpDir} \
 -XX:ParallelGCThreads=${numThreads} \
--jar /Shares/CL_Shared/programs/MELTv2.1.5/MELT.jar \
+-jar /Shares/CL_Shared/programs/MELTv2.2.2/MELT.jar \
 MakeVCF \
--genotypingdir ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
--p ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
--o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
--w ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
+-genotypingdir ${meltDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
+-p ${meltDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
+-o ${meltDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
+-w ${meltDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 -t ${zipDir}/${queries[$SLURM_ARRAY_TASK_ID]}_MELT.zip  \
 -h ${fastaFile}
 
