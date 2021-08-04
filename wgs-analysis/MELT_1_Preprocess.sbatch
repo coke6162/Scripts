@@ -58,7 +58,7 @@ java \
 -Xmx4G \
 -Djava.io.tmpdir=${tmpDir} \
 -XX:ParallelGCThreads=${numThreads} \
--jar /Shares/CL_Shared/programs/MELTv2.2.2/MELT.jar \
+-jar /Shares/CL_Shared/programs/MELTv2.1.5/MELT.jar \
 Preprocess \
 -bamfile ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
 -h ${fastaFile}

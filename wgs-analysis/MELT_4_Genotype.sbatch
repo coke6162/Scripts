@@ -56,7 +56,7 @@ java \
 -Xmx16G \
 -Djava.io.tmpdir=${tmpDir} \
 -XX:ParallelGCThreads=${numThreads} \
--jar /Shares/CL_Shared/programs/MELTv2.2.2/MELT.jar \
+-jar /Shares/CL_Shared/programs/MELTv2.1.5/MELT.jar \
 Genotype \
 -bamfile ${meltDir}/${bamFile} \
 -p ${meltDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
