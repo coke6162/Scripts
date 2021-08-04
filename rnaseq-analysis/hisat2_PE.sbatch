@@ -18,9 +18,9 @@
 ## General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 8
+#SBATCH -n 4
 #SBATCH --time=4:00:00
-#SBATCH --mem=32GB
+#SBATCH --mem=8GB
 
 # Job name and output
 #SBATCH -J hisat2_PE
@@ -33,7 +33,7 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # Set constant variables
-numThreads=8
+numThreads=4
 
 # Set query files
 # note: remove R1/R2 to generate a unique identifier for each pair of files
