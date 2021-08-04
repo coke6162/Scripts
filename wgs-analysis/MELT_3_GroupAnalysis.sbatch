@@ -9,7 +9,7 @@
 ## zipDir=/scratch/Users/coke6162/yyyymmdd_projectName/melt/zip \
 ## fastaFile=/Shares/CL_Shared/db/genomes/bosTau9/1000_Bull_Genomes_Project/fa/ARS-UCD1.2_Btau5.0.1Y.fa \
 ## meiList=/scratch/Users/coke6162/yyyymmdd_projectName/melt/mei_list.txt \
-## genesFile=/Shares/CL_Shared/db/genomes/bosTau9/annotations/bosTau9.refseq.genes.bed \
+## genesFile=/Shares/CL_Shared/db/genomes/bosTau9/annotations/bosTau9.ncbiRefSeq.bed
 ## sbatch --array 0-5 MELT_3_GroupAnalysis.sbatch
 
 ## General settings
