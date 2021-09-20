@@ -18,7 +18,7 @@
 ## General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 8
+#SBATCH -n 4
 #SBATCH --time=8:00:00
 #SBATCH --mem=16GB
 
@@ -33,7 +33,7 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # Set constant variables
-numThreads=8
+numThreads=4
 nonChrM=$(cat ${genomeChrFile} | awk '{print $1}' | grep -v chrM | tr '\n' ' ')
 
 # Load modules

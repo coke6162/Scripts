@@ -14,7 +14,7 @@
 #SBATCH -N 1
 #SBATCH -c 8
 #SBATCH --time=24:00:00
-#SBATCH --mem=32GB
+#SBATCH --mem=64GB
 
 # Job name and output
 #SBATCH -J subsetFragSize
@@ -61,7 +61,7 @@ alignmentSieve \
 --maxFragmentLength 120 \
 --outFile ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan120_filtered.bam.tmp \
 --filteredOutReads ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_moreThan120_filtered.bam.tmp \
---numberOfProcessors ${numThreads} \
+--numberOfProcessors ${numThreads}
 
 # Sort and index output bams
 echo $(date +"[%b %d %H:%M:%S] Sorting bams (less than 120)...")

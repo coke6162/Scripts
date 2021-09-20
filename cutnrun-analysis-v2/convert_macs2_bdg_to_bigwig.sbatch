@@ -1,14 +1,14 @@
 #!/bin/bash
 
-## Script for converting bedgraphs to bigwigs
-## Date: 11 September 2019
+## Script for converting macs2 bedgraphs to bigwigs
+## Date: 11 June 2021
 
 ## Example usage:
-## cd /Users/coke6162/repos/scripts/cutnrun-analysis
-## inDir=/Users/coke6162/project20xx_cutnrun/macs2 \
-## outDir=/Users/coke6162/project20xx_cutnrun/bigwig \
-## chromSizes=/Shares/CL_Shared/db/genomes/bosTau8/fa/bosTau9.chrom.sizes \
-## sbatch --array 0-3 bedGraphToBigWig.sbatch 
+## cd /Users/coke6162/repos/scripts/cutnrun-analysis-v2
+## inDir=/scratch/Users/coke6162/yyyymmdd_projectName/5_macs2_output_PE \
+## outDir=/scratch/Users/coke6162/yyyymmdd_projectName/7_bigwigs \
+## chromSizes=/Shares/CL_Shared/db/genomes/bosTau9/fa/bosTau9.chrom.sizes \
+## sbatch --array 0-0 convert_macs2_bdg_to_bigwig.sbatch
 
 # General settings
 #SBATCH -p short
@@ -28,29 +28,28 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # Define query files
-queries=($(ls ${inDir}/*.bdg | xargs -n 1 basename))
+queries=($(ls ${inDir}/*_treat_pileup.bdg | xargs -n 1 basename | sed 's/_treat_pileup.bdg//g'))
 
-# Convert bedgraphs to bigwigs
+# Sort bedgraph
 pwd; hostname; date
 
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 echo $(date +"[%b %d %H:%M:%S] Sorting bedgraph...")
 
-sort \
--k1,1 -k2,2n \
-${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} \
-> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bdg}.sorted.bdg
+sort -k1,1 -k2,2n ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_treat_pileup.bdg \
+> ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_macs2.bdg.tmp
 
+# Convert sorted bedgraph to bigwig
 echo $(date +"[%b %d %H:%M:%S] Converting sorted bedgraph to bigwig...")
-echo "bedGraphToBigWig v 4"
 
 /Shares/CL_Shared/programs/ucsc/bedGraphToBigWig \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bdg}.sorted.bdg \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_macs2.bdg.tmp \
 ${chromSizes} \
-${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bdg}.bw
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_macs2.bw
 
+# Remove sorted bedgraph
 echo $(date +"[%b %d %H:%M:%S] Removing sorted bedgraph...")
 
-rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]%.bdg}.sorted.bdg
+rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_macs2.bdg.tmp
 
 echo $(date +"[%b %d %H:%M:%S] Done")

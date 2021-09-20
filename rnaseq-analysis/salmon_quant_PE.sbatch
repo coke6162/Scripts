@@ -1,22 +1,22 @@
 #!/bin/bash
 
 ## Script for running salmon quant with PE reads
-## Date: 21 April 2019
+## Date: 1 February 2021
 
 ## Example usage:
 ## cd /Users/coke6162/repos/scripts/rnaseq-analysis
-## indexDir=/Users/CL_Shared/db/genomes/mm10/index/salmon/gencode.vM18.transcripts_salmon_index \
-## gtfFile=/Users/CL_Shared/db/genomes/mm10/annotations/gencode.vM18.annotation.gtf \
-## inDir=/Users/coke6162/projoect20xx_rnaseq/trimmomatic \
-## outDir=/Users/coke6162/project20xx_rnaseq/salmon \
-## sbatch salmon_quant_PE.sbatch
+## indexDir=/Shares/CL_Shared/db/genomes/bosTau9/index/salmon/bosTau9.ncbiRefSeq \
+## gtfFile=/Shares/CL_Shared/db/genomes/bosTau9/annotations/bosTau9.ncbiRefSeq.gtf \
+## inDir=/scratch/Users/coke6162/yyyymmdd_RNA-seq_projectName/bbduk \
+## outDir=/scratch/Users/coke6162/yyyymmdd_RNA-seq_projectName/salmon/refseq \
+## sbatch --array 0-14 salmon_quant_PE.sbatch
 
 ## General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 8
+#SBATCH -n 4
 #SBATCH --time=4:00:00
-#SBATCH --mem=8GB
+#SBATCH --mem=4GB
 
 # Job name and output
 #SBATCH -J salmon_quant_PE
@@ -29,28 +29,32 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # Set constant variables
-numThreads=8
+numThreads=4
 
 # Set query files
 # note: remove R1/R2 to generate a unique identifier for each pair of files
-queries=($(ls ${inDir}/*_paired.fastq.gz | xargs -n 1 basename | sed 's/_R1_paired.fastq.gz//g' \
-	| sed 's/_R2_paired.fastq.gz//g' | uniq))
+queries=($(ls ${inDir}/*.fastq.gz | xargs -n 1 basename | sed 's/_1_bbduk.fastq.gz//g' | sed 's/_2_bbduk.fastq.gz//g' | uniq))
 
-# Load hisat2 and samtools
-module load salmon
+module purge
 
-# Run hisat2
+# Run salmon
 pwd; hostname; date
 
 echo "salmon version: "$(salmon --version)
 echo "Processing file: "${queries[$SLURM_ARRAY_TASK_ID]}
 echo "Starting salmon pseudo-alignment..."
 
-salmon quant -i ${indexDir} --libType A -p ${numThreads} --geneMap ${gtfFile} \
--1 <(gunzip -c ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R1_paired.fastq.gz) \
--2 <(gunzip -c ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_R2_paired.fastq.gz) \
---validateMappings --rangeFactorizationBins 4 --gcBias \
--o ${outDir}/{queries[$SLURM_ARRAY_TASK_ID]}_transcripts_quant
+salmon quant \
+-i ${indexDir} \
+--libType A \
+-p ${numThreads} \
+--geneMap ${gtfFile} \
+-1 <(gunzip -c ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_1_bbduk.fastq.gz) \
+-2 <(gunzip -c ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_2_bbduk.fastq.gz) \
+--validateMappings \
+--rangeFactorizationBins 4 \
+--gcBias \
+-o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}
 
 echo $(date +"[%b %d %H:%M:%S] Done")
 

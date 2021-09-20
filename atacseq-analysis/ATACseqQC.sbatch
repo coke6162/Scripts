@@ -29,17 +29,17 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # Define constant variables
-libraryDir=/Users/coke6162/R/x86_64-redhat-linux-gnu-library/3.5/ATACseqQC/extdata
+libraryDir=/Users/coke6162/R/x86_64-redhat-linux-gnu-library/3.6/ATACseqQC/extdata
 
 # Define query files
 queries=($(ls ${inDir}/*.sorted.bam | xargs -n 1 basename | sed 's/.sorted.bam//g'))
 
 # Load modules
 module load samtools
-module load R/3.5.1
+module load R/3.6.1
 
 # Specify R library paths
-export R_LIBS='/Users/coke6162/R/x86_64-redhat-linux-gnu-library/3.5/'
+export R_LIBS='/Users/coke6162/R/x86_64-redhat-linux-gnu-library/3.6/'
 
 # Copy bam and bai files to the ATACseqQC directory
 pwd; hostname; date

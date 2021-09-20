@@ -12,9 +12,9 @@
 # General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -c 8
+#SBATCH -c 4
 #SBATCH --time=4:00:00
-#SBATCH --mem=16GB
+#SBATCH --mem=4GB
 
 # Job name and output
 #SBATCH -J plotFragmentSize
@@ -34,7 +34,7 @@ module load singularity
 
 # Define key variables
 deeptools=/scratch/Shares/public/singularity/deeptools-3.0.1-py35_1.img
-numThreads=8
+numThreads=4
 
 # Get fragment size 
 pwd; hostname; date

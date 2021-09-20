@@ -11,11 +11,11 @@
 ## sbatch --array=0-5 meme-chip.sbatch
 
 ## General settings
-#SBATCH -p long
+#SBATCH -p short
 #SBATCH -N 1
 #SBATCH -n 1
-#SBATCH --time=5-0:00:00
-#SBATCH --mem=64G
+#SBATCH --time=24:00:00
+#SBATCH --mem=2G
 
 # Job name and output
 #SBATCH -J meme-chip

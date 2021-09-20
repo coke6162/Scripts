@@ -1,23 +1,24 @@
 #!/bin/bash
 
 ## Script to search for repeat enrichment using giggle
-## Date: 16 September 2019 
+## Date: 14 June 2021
 
 ## Example usage:
-## inDir=/Users/coke6162/project20xx_cutnrun/macs2 \
-## outDir=/Users/coke6162/project20xx_cutnrun/giggle/non-DE/allRep \
-## repeatIndexDir=/Shares/CL_Shared/db/giggle/bosTau8/repeats/indexed \
-## repeatPath=/Users/CL_Shared/db/giggle/bosTau8/repeats/sorted/ \
-## genomeSize=2660906405 \
-## suffix=narrowPeak \
-## sbatch --array 0-3 giggleSearch.sbatch
+## cd /Users/coke6162/repos/scripts/cutnrun-analysis-v2
+## inDir=/scratch/Users/coke6162/yyyymmdd_projectName/6_macs2_output_merged/histone \
+## outDir=/scratch/Users/coke6162/yyyymmdd_projectName/10_giggle_output \
+## repeatIndexDir=/Shares/CL_Shared/db/giggle/bosTau9/repeats/indexed \
+## repeatPath=/Shares/CL_Shared/db/giggle/bosTau9/repeats/sorted/ \
+## genomeSize=2715853792 \
+## suffix="_mergedpeaks.bed" \
+## sbatch --array 0-0 giggle_search.sbatch
 
 # General settings
 #SBATCH -p short
 #SBATCH -N 1
 #SBATCH -c 1
 #SBATCH --time=1:00:00
-#SBATCH --mem=1GB
+#SBATCH --mem=5MB
 #SBATCH --propagate=NONE
 
 # Job name and output
@@ -25,27 +26,26 @@
 #SBATCH -o /Users/%u/sbatch_script/output/slurm-%A_%a.out
 #SBATCH -e /Users/%u/sbatch_script/error/slurm-%A_%a.err
 
-# Email notifications 
-#SBATCH --mail-type=END                                         
-#SBATCH --mail-type=FAIL                                        
+# Email notifications
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
 #SBATCH --mail-user=coke6162@colorado.edu
 
-# define query files
-queries=($(ls ${inDir}/*${suffix} | xargs -n 1 basename))
+# important note: make sure the giggle executable is in your PATH
 
 # load modules
 module load samtools
 
-# run the thing
-pwd; hostname; date
-
-echo "samtools version: "$(samtools --version)
-echo "Processing peak file: "${queries[$SLURM_ARRAY_TASK_ID]}
+# define query files
+queries=($(ls ${inDir}/*${suffix} | xargs -n 1 basename))
 
 # make a temporary directory
-echo $(date +"[%b %d %H:%M:%S] Making a temporary directory...")
+pwd; hostname; date
+
+echo "Making a temporary directory..."
 
 mkdir -p ${inDir}/tmp
+cd ${inDir}/tmp
 
 # add '.bed' suffix
 echo $(date +"[%b %d %H:%M:%S] Adding '.bed' suffix...")
@@ -53,7 +53,7 @@ echo $(date +"[%b %d %H:%M:%S] Adding '.bed' suffix...")
 cp ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]} ${inDir}/tmp/${queries[$SLURM_ARRAY_TASK_ID]}.bed
 
 # bgzip each bed file
-echo $(date +"[%b %d %H:%M:%S] Starting bgzip...")
+echo $(date +"[%b %d %H:%M:%S] Compressing files ending in '.bed'...")
 
 bgzip ${inDir}/tmp/${queries[$SLURM_ARRAY_TASK_ID]}.bed
 
@@ -91,4 +91,4 @@ echo $(date +"[%b %d %H:%M:%S] Removing '.bed.gz' files...")
 
 rm ${inDir}/tmp/${queries[$SLURM_ARRAY_TASK_ID]}.bed.gz
 
-echo $(date +"[%b %d %H:%M:%S] Done")
+echo $(date +"[%b %d %H:%M:%S] Done!")
