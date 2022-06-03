@@ -26,9 +26,6 @@
 #SBATCH --mail-type=FAIL                                        
 #SBATCH --mail-user=coke6162@colorado.edu
 
-# Load modules
-module load sra
-
 # Set temporary dir
 tmpDir=${workingDir}/tmp/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}
 
@@ -52,7 +49,7 @@ echo "Working directory: " ${workingDir}
 echo "fastq-dump version: "$(fasterq-dump --version)
 echo "Processing sample: "${queries[$SLURM_ARRAY_TASK_ID]}
 
-fasterq-dump \
+/Shares/CL_Shared/programs/sratoolkit.3.0.0-ubuntu64/bin/fasterq-dump \
 --outdir ${workingDir} \
 --threads 1 \
 --mem 4GB \
