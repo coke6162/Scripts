@@ -12,9 +12,9 @@
 # General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -c 4
+#SBATCH -c 2
 #SBATCH --time=4:00:00
-#SBATCH --mem=4GB
+#SBATCH --mem=2GB
 
 # Job name and output
 #SBATCH -J plotFragmentSize
@@ -35,7 +35,7 @@ module load python/3.6.3
 
 # Define key variables
 deeptools=/scratch/Shares/public/singularity/deeptools-3.0.1-py35_1.img
-numThreads=4
+numThreads=2
 
 # Define temporary directory
 tmpDir=${outDir}/tmp/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}

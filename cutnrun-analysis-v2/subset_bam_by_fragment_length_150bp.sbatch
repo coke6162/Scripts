@@ -13,8 +13,8 @@
 # General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -c 2
-#SBATCH --time=1:00:00
+#SBATCH -n 2
+#SBATCH --time=12:00:00
 #SBATCH --mem=6GB
 
 # Job name and output
@@ -28,7 +28,7 @@
 #SBATCH --mail-user=coke6162@colorado.edu
 
 # Define query files
-queries=($(ls ${inDir}/*_filtered.sorted.bam | xargs -n 1 basename | grep -v "lessThan150" | sed --expression='s/_filtered.sorted.bam//g' | uniq))
+queries=($(ls ${inDir}/*_filtered.sorted.bam | xargs -n 1 basename | grep -v "lessThan150" | grep -v "greaterThan151" | sed 's/_filtered.sorted.bam//g' | uniq))
 
 # Load modules
 module purge
@@ -58,7 +58,7 @@ mkdir -p ${tmpDir}/deeptools
 TMPDIR="${tmpDir}/deeptools"
 export TMPDIR
 
-# Use "alignmentSieve" to filter reads by size (<150bp)
+## Use "alignmentSieve" to filter reads by size (<= 150bp)
 echo $(date +"[%b %d %H:%M:%S] Starting deeptools alignmentSieve...")
 
 echo "Processing sample: "${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam
@@ -69,22 +69,36 @@ alignmentSieve \
 --outFile ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan150_filtered.bam.tmp \
 --numberOfProcessors ${numThreads}
 
+# Use "alignmentSieve" to filter reads by size (>150bp)
+echo $(date +"[%b %d %H:%M:%S] Starting deeptools alignmentSieve...")
+
+alignmentSieve \
+--bam ${inDir}/${queries[$SLURM_ARRAY_TASK_ID]}_filtered.sorted.bam \
+--minFragmentLength 151 \
+--outFile ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_greaterThan151_filtered.bam.tmp \
+--numberOfProcessors ${numThreads}
+
 # Sort subsetted bams
 echo $(date +"[%b %d %H:%M:%S] Sorting subsetted bams...")
 
-samtools sort \
--@ ${numThreads} \
--T ${tmpDir} \
+samtools sort -@ ${numThreads} -T ${tmpDir} \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan150_filtered.bam.tmp \
 -o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan150_filtered.sorted.bam
+
+samtools sort -@ ${numThreads} -T ${tmpDir} \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_greaterThan151_filtered.bam.tmp \
+-o ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_greaterThan151_filtered.sorted.bam
 
 # Index subsetted bams
 echo $(date +"[%b %d %H:%M:%S] Indexing subsetted bams...")
 
-samtools index \
--@ ${numThreads} \
+samtools index -@ ${numThreads} \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan150_filtered.sorted.bam \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan150_filtered.sorted.bam.bai
+
+samtools index -@ ${numThreads} \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_greaterThan151_filtered.sorted.bam \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_greaterThan151_filtered.sorted.bam.bai
 
 # Generate flagstat files from subsetted bam files
 echo $(date +"[%b %d %H:%M:%S] Making flagstat file from subsetted bams...")
@@ -94,10 +108,15 @@ samtools flagstat \
 ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan150_filtered.sorted.bam \
 > ${reportsDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan150_filtered_flagstat.txt
 
+samtools flagstat -@ ${numThreads} \
+${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_greaterThan151_filtered.sorted.bam \
+> ${reportsDir}/${queries[$SLURM_ARRAY_TASK_ID]}_greaterThan151_filtered_flagstat.txt
+
 # Remove intermediate files
 echo $(date +"[%b %d %H:%M:%S] Removing intermediate files...")
 
 rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_lessThan150_filtered.bam.tmp
+rm ${outDir}/${queries[$SLURM_ARRAY_TASK_ID]}_greaterThan151_filtered.bam.tmp
 rm -rf ${tmpDir}/samtools
 rm -rf ${tmpDir}/deeptools
 rm -r ${tmpDir}

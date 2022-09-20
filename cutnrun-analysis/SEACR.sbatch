@@ -4,11 +4,13 @@
 ## Date: October 1 2019
 
 ## Example usage:
-## cd /Users/coke6162/repos/project_files/20190910_CUTnRUN_MDBK
-## inDir=/Users/coke6162/project20xx_cutnrun/bwa \
-## outName=/Users/coke6162/project20xx_cutnrun/seacr/relaxed \
-## mode=relaxed \
-## bash runSEACR.sh
+## cd /Users/coke6162/repos/project_files/20211119_CUTnRUN_myoLuc_pilot_revisit
+## targetDir=/scratch/Users/coke6162/20211119_CUTnRUN_myoLuc_pilot_revisit/3_bams/myoLuc/histone/unnormalized_bdg \
+## controlDir=/scratch/Users/coke6162/20211119_CUTnRUN_myoLuc_pilot_revisit/3_bams/myoLuc/control/unnormalized_bdg \
+## outDir=/scratch/Users/coke6162/20211119_CUTnRUN_myoLuc_pilot_revisit/8_seacr_output/unnormalized/histone/relaxed \
+## mode=norm \
+## stringency=relaxed \
+## bash runSEACR_unnormalized.sh
 
 ## General settings
 #SBATCH -p short
@@ -39,10 +41,10 @@ echo "Bedtools version: "$(bedtools --version)
 echo "Processing file: "${inDir}/${inFile}
 
 bash /Shares/CL_Shared/programs/SEACR_1.3/SEACR_1.3.sh \
-${inDir}/${inFile} \
-${inDir}/${controlFile} \
-norm \
+${targetDir}/${inFile} \
+${controlDir}/${controlFile} \
 ${mode} \
+${stringency} \
 ${outDir}/${outName}
 
 echo $(date +"[%b %d %H:%M:%S] Done")

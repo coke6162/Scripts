@@ -15,7 +15,7 @@
 #SBATCH -N 1
 #SBATCH -c 1
 #SBATCH --time=2:00:00
-#SBATCH --mem=4G
+#SBATCH --mem=2G
 
 # Job name and output
 #SBATCH -J frip_score

@@ -14,8 +14,8 @@
 #SBATCH -p long
 #SBATCH -N 1
 #SBATCH -c 1
-#SBATCH --time=4-0:00:00
-#SBATCH --mem=1GB
+#SBATCH --time=2-0:00:00
+#SBATCH --mem=32GB
 
 # Job name and output
 #SBATCH -J xstreme

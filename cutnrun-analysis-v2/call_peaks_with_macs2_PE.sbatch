@@ -16,7 +16,7 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --time=6:00:00
-#SBATCH --mem=2G
+#SBATCH --mem=8G
 
 # Job name and output
 #SBATCH -J macs2_PE

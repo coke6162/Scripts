@@ -13,7 +13,7 @@
 # General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -n 1
+#SBATCH -n 4
 #SBATCH --time=1:00:00
 #SBATCH --mem=2GB
 

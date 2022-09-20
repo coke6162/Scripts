@@ -16,9 +16,9 @@
 # General settings
 #SBATCH -p short
 #SBATCH -N 1
-#SBATCH -c 8
+#SBATCH -c 1
 #SBATCH --time=24:00:00
-#SBATCH --mem=32GB
+#SBATCH --mem=8GB
 
 # Job name and output
 #SBATCH -J fimo
@@ -43,7 +43,7 @@ echo "bedtools version: "$(bedtools --version)
 
 echo "Making output directories..."
 
-mkdir -p ${outDir}/pval_${pvalue}
+mkdir -p ${outDir}/${name}/pval_${pvalue}
 
 # Run fimo
 echo $(date +"[%b %d %H:%M:%S] Running fimo...")
@@ -54,36 +54,36 @@ fimo \
 --thresh ${pvalue} \
 ${motifFile} \
 ${fastaFile} \
-> ${outDir}/pval_${pvalue}/${name}_${pvalue}.txt
+> ${outDir}/${name}/pval_${pvalue}/${name}_${pvalue}.txt
 
 # Convert output to bed & add pval as a file suffix
 echo $(date +"[%b %d %H:%M:%S] Convert fimo output to bed format...")
 
-mkdir -p ${outDir}/pval_${pvalue}
+mkdir -p ${outDir}/${name}/pval_${pvalue}
 
 /opt/python/2.7.14/bin/python2.7 /Shares/CL_Shared/scripts/ed/fimo_analysis.py \
--i ${outDir}/pval_${pvalue}/${name}_${pvalue}.txt \
--o ${outDir}/pval_${pvalue}
+-i ${outDir}/${name}/pval_${pvalue}/${name}_${pvalue}.txt \
+-o ${outDir}/${name}/pval_${pvalue}
 
-mv ${outDir}/pval_${pvalue}/${name}.bed ${outDir}/pval_${pvalue}/${name}_${pvalue}.bed 
+mv ${outDir}/${name}/pval_${pvalue}/${name}.bed ${outDir}/${name}/pval_${pvalue}/${name}_${pvalue}.bed 
 
 # Create a bedgraph from the bed output
 echo $(date +"[%b %d %H:%M:%S] Create a bedgraph from bed output...")
 
 bedtools sort \
--i ${outDir}/pval_${pvalue}/${name}_${pvalue}.bed \
+-i ${outDir}/${name}/pval_${pvalue}/${name}_${pvalue}.bed \
 | bedtools merge \
 -i - \
 -o max \
 -c 5 \
-> ${outDir}/pval_${pvalue}/${name}_${pvalue}.bdg
+> ${outDir}/${name}/pval_${pvalue}/${name}_${pvalue}.bdg
 
 # Create a bigwig from the bedgraph output
 echo $(date +"[%b %d %H:%M:%S] Create a bigwig from bedgraph output...")
 
 /Shares/CL_Shared/programs/ucsc/bedGraphToBigWig \
-${outDir}/pval_${pvalue}/${name}_${pvalue}.bdg \
+${outDir}/${name}/pval_${pvalue}/${name}_${pvalue}.bdg \
 ${chromSizes} \
-${outDir}/pval_${pvalue}/${name}_${pvalue}.bw
+${outDir}/${name}/pval_${pvalue}/${name}_${pvalue}.bw
 
 echo $(date +"[%b %d %H:%M:%S] Done")

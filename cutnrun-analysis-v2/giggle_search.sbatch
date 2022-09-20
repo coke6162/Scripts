@@ -18,7 +18,7 @@
 #SBATCH -N 1
 #SBATCH -c 1
 #SBATCH --time=1:00:00
-#SBATCH --mem=5MB
+#SBATCH --mem=100MB
 #SBATCH --propagate=NONE
 
 # Job name and output

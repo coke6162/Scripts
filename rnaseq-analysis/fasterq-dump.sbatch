@@ -46,7 +46,7 @@ mkdir -p ${tmpDir}
 echo $(date +"[%b %d %H:%M:%S] Downloading srr...")
 
 echo "Working directory: " ${workingDir}
-echo "fastq-dump version: "$(fasterq-dump --version)
+echo "fastq-dump version: "$(/Shares/CL_Shared/programs/sratoolkit.3.0.0-ubuntu64/bin/fasterq-dump --version)
 echo "Processing sample: "${queries[$SLURM_ARRAY_TASK_ID]}
 
 /Shares/CL_Shared/programs/sratoolkit.3.0.0-ubuntu64/bin/fasterq-dump \
