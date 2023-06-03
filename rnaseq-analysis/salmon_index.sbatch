@@ -30,9 +30,6 @@
 numThreads=8
 kmerLen=31
 
-# Load salmon
-module load salmon
-
 # Run salmon index
 pwd; hostname; date
 
